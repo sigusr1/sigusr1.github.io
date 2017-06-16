@@ -20,6 +20,3 @@ type: page
 
     google代理集锦。
 
-## Comments
-
-{% include comments.html %}

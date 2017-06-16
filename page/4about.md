@@ -17,7 +17,3 @@ To Do.
 
 * GitHub：[sigusr1](https://github.com/sigusr1)
 * email：wtx05@126.com
-
-## Comments
-
-{% include comments.html %}
