@@ -1,6 +1,6 @@
 ---
 layout: post  
-title:  "gcc编译时临时文件存放路径"  
+title:  "gcc编译临时文件存放路径"  
 date:   2017-07-02  
 categories: C/C++  
 tags: gcc 临时文件 路径  
@@ -23,7 +23,7 @@ fatal error: error writing to /tmp/ccGjoKTF.s:No space left on device
   
 奇怪了，编译脚本中并没有往tmp目录写文件呀！  
 
-仔细看了下错误信息，这个ccGjoKTF.s应该是编译过程的中间文件,其中文件名是随机值。然而makefile中并未要求保留汇编代码。  
+仔细看了下错误信息，这个ccGjoKTF.s应该是编译过程的中间文件，其中文件名是随机值。然而makefile中并未要求保留汇编代码。  
 
 写了个demo，用strace（strace gcc test）跟踪了下，发现gcc不仅把汇编代码（*.s）写到了tmp目录，也把二进制文件（*.o)写到了tmp目录，并且编译完成自动删除临时文件。  
 
@@ -39,6 +39,9 @@ export TMPDIR=$(pwd)
 
 
 至于tmp目录空间不足，ls -l 一看，竟然是有些项目的makefile写的有问题，编译完成后残留了很多文件。  
+
+  
+  
 
 **参考文档：**  
 [https://stackoverflow.com/questions/4874735/tmp-folder-and-gcc](https://stackoverflow.com/questions/4874735/tmp-folder-and-gcc)  
