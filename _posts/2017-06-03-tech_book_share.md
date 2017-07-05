@@ -21,3 +21,9 @@ mathjax: true
 
 本书前半部分写的挺不错的，第三章开始逐渐变得凌乱了，未能做到善始善终。总体来讲，还是值得一看的。
 
+## 2. [《网络基本功》](http://34.210.34.184:8888/books/tech/network-basic.pdf) ##
+这是GitBook上发现的讲网络基本知识的书籍，很不错。  
+项目地址:[https://www.gitbook.com/book/wizardforcel/network-basic](https://www.gitbook.com/book/wizardforcel/network-basic)
+
+
+
