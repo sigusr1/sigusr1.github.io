@@ -44,6 +44,9 @@ google_analytics_id: UA-100468424-1 # google 分析追踪id
 # Build settings
 markdown: kramdown
 
+# 二维码地址
+img_qr: https://sigusr1.github.io/blog_qr.gif
+
 kramdown:
   input: GFM
   syntax_highlighter: rouge
