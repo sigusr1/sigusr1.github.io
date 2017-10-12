@@ -17,6 +17,10 @@ mathjax: true
 在这一过程中，我们将学到很多有趣的东西。
 
 
+
+
+
+
 ## 实验环境 ##
 所有的脚本和程序都在下面的环境中测试过：  
 
@@ -54,7 +58,7 @@ mathjax: true
 - 虚拟内存大小依赖于计算机系统架构
 - 不同的操作系统对虚拟内存的处理会有所不同, 对于现代的大多数操作系统来说, 虚拟内存如下所示:
 
-![虚拟内存示意图](https://github.com/sigusr1/sigusr1.github.io/blob/master/picture/virtual_memory/virtual_memory.png)
+![虚拟内存示意图](https://github.com/sigusr1/sigusr1.github.io/blob/master/picture/virtual_memory/virtual_memory.jpg)
 
 在虚拟内存的高地址空间，我们可以看到(下面仅列出了部分内容，并非全部)：
 
