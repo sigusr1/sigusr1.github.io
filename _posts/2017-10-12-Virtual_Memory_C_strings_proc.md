@@ -21,7 +21,7 @@ mathjax: true
 
 
 
-## 实验环境 ##
+## 一、实验环境 ##
 所有的脚本和程序都在下面的环境中测试过：  
 
 - Ubuntu 14.04 LTS  
@@ -32,14 +32,14 @@ mathjax: true
 	- Python 3.4.3 (default, Nov 17 2016, 01:08:31)  
 	- [GCC 4.8.4] on linux
 
-## 预备知识 ##
+## 二、预备知识 ##
 阅读本文所需知识：  
 
 - C语言基础
 - 些许Python知识
 - 了解Linux的文件系统和shell命令
 
-## 虚拟内存 ##
+## 三、虚拟内存 ##
 在计算机领域， 虚拟内存是通过软硬件结合实现的一种内存管理技术， 它将程序所使用的内存地址（虚拟内存地址）映射到计算机的物理内存上（物理内存地址），这使得每个程序看到的内存地址空间都是连续的（或是一些连续地址空间的集合）。操作系统管理虚拟地址空间， 以及虚拟地址空间到物理内存的映射。CPU中的地址转换硬件(通常被称为内存管理单元, MMU)自动将虚拟内存地址转换成物理内存地址。操作系统可以提供比实际物理内存更多的虚拟内存，这一行为是通过操作系统中的软件来实现的。  
 
 虚拟内存的主要好处包含以下几点:  
@@ -78,7 +78,7 @@ mathjax: true
   
 
 
-## 剖析一个简单的C程序 ##
+## 四、剖析一个简单的C程序 ##
 
 
 
@@ -259,7 +259,7 @@ The proc filesystem is a pseudo-filesystem which provides an interface to kernel
 
 可以通过命令`ps`来查看某个进程的pid（具体请参阅`man ps`)。
 
-## 替换进程的字符串 ##
+## 五、替换进程的字符串 ##
 我们接下来要在一个进程的堆中搜索特定字符串，并用另一个字符串（长度不大于原字符串）替换它。 现在我们已经掌握了所需要的理论知识。
 
 下面这个程序是我们将要hack的程序，正常情况下它循环输出字符串`Holberton`。
@@ -640,16 +640,16 @@ julien@holberton:~/holberton/w/hackthevm0$
 
 
 
-## 下节预告 ##
+## 六、下节预告 ##
 
 下一篇文章中我们要做的事情和本章类似， 不同的是我们将访问并修改一个Python3 脚本的内存。 这做起来比较吃力， 所以我们需要了解Pyhton3 内部的一些机制。不信你可以试试，上面的脚本read_write_heap.py并不能修改Python3进程中的ASCII字符串。
 
-## 继续阅读 ##
+## 七、继续阅读 ##
 
 - 第一篇:[Hack The Virtual Memory: C strings & /proc](https://blog.holbertonschool.com/hack-the-virtual-memory-c-strings-proc/)
 - 第二篇:[Hack The Virtual Memory: Python bytes](https://blog.holbertonschool.com/hack-the-virtual-memory-python-bytes/)
 - 第三篇:[Hack The Virtual Memory: Drawing the VM diagram](https://blog.holbertonschool.com/hack-the-virtual-memory-drawing-the-vm-diagram/)
 - 第四篇:[Hack the Virtual Memory: malloc, the heap & the program break](https://blog.holbertonschool.com/hack-the-virtual-memory-malloc-the-heap-the-program-break/)
 
-## 原文链接 ##
+## 八、原文链接 ##
 [Hack The Virtual Memory: C strings & /proc](https://blog.holbertonschool.com/hack-the-virtual-memory-c-strings-proc/)

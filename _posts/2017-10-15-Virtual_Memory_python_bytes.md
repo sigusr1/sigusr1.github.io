@@ -20,7 +20,7 @@ mathjax: true
 
 
 
-## 预备知识 ##
+## 一、预备知识 ##
 本文基于上一篇文章[《虚拟内存探究 -- 第一篇:C strings & /proc》](https://sigusr1.github.io/2017/10/12/Virtual_Memory_C_strings_proc/)中所讲的知识， 所以，在继续阅读本文前，请确保阅读并理解上一篇文章。  
 
 为了方便理解本文，你需要具备以下知识：  
@@ -30,7 +30,7 @@ mathjax: true
 - 了解Linux的文件系统和shell命令
 - `/proc`文件系统的基本知识（可参阅[《虚拟内存探究 -- 第一篇:C strings & /proc》](https://sigusr1.github.io/2017/10/12/Virtual_Memory_C_strings_proc/)中的相关介绍）
 
-## 实验环境 ##
+## 二、实验环境 ##
 所有的脚本和程序都在下面的环境中测试过：  
 
 - Ubuntu 14.04 LTS  
@@ -41,7 +41,7 @@ mathjax: true
 	- Python 3.4.3 (default, Nov 17 2016, 01:08:31)  
 	- [GCC 4.8.4] on linux
 
-## 剖析一个简单的Python脚本 ##
+## 三、剖析一个简单的Python脚本 ##
 
 下面是我们将要使用的Python脚本（`main.py`）。我们将尝试修改运行该脚本的进程虚拟内存中的“字符串” `Holberton`。
 
@@ -322,7 +322,7 @@ julien@holberton:~/holberton/w/hackthevm1$
 由此可见， 我们的字符串既不在栈上也不在堆上。它究竟在哪里呢？  
 我们只有从Python3的内部实现中去寻找答案。
 
-## 从Python实现中寻找目标字符串 ##
+## 四、从Python实现中寻找目标字符串 ##
 
 *提示：Python3有很多实现版本，本文使用的是最原始的、最常用的CPython（用C语言实现的）。后续有关Python3的讨论都是基于CPython。*
 
@@ -454,7 +454,7 @@ typedef struct {
 
 假如不知道CPython中内置函数`id()`返回的是对象的内存地址，我们如何查找字符串所在区域呢？这种情况下， 我们可以解析内存中的对象。
 
-## 从内存中寻找目标字符串 ##
+## 五、从内存中寻找目标字符串 ##
 
 如果想查看内存中的`PyBytesObject`变量， 我们需要写一个C函数，并且用Python调用这个C函数。Python可以通过多种方式调用C函数。我们仅使用最简单的动态库的方式。
 
@@ -678,7 +678,7 @@ b'Holberton'
 ![](http://34.210.34.184:8888/blog/virtual_memory/tumblr_nomr17FFSt1tym3lfo1_400.gif)
 
 
-## 替换Python进程的字符串 ##
+## 六、替换Python进程的字符串 ##
 
 现在我们已经了解了事情的来龙去脉，可以“暴力”搜索内存区域了。原来替换字符串的Python脚本只搜索堆段和栈段，现在我们让它搜索所有具有读写权限的内存区段。下面是具体的代码(`rw_all.py`):
 
@@ -886,7 +886,7 @@ julien@holberton:~/holberton/w/hackthevm1$
 
 ![](http://34.210.34.184:8888/blog/virtual_memory/giphy-3.gif)
 
-## 下节预告 ##
+## 七、下节预告 ##
 本文我们成功修改了正在运行的Python3脚本中的字符串，但是仍有几个问题有待解答：
 - 堆中的字符串`Holberton`是干什么的？
 - Python3如何在堆以外分配内存？
@@ -894,12 +894,12 @@ julien@holberton:~/holberton/w/hackthevm1$
 
 下一篇文章我们将一一解答上面的问题。
 
-## 继续阅读 ##
+## 八、继续阅读 ##
 
 - 第一篇:[虚拟内存探究 -- 第一篇:C strings & /proc](https://sigusr1.github.io/2017/10/12/Virtual_Memory_C_strings_proc/)
 - 第二篇:[Hack The Virtual Memory: Python bytes](https://blog.holbertonschool.com/hack-the-virtual-memory-python-bytes/)
 - 第三篇:[Hack The Virtual Memory: Drawing the VM diagram](https://blog.holbertonschool.com/hack-the-virtual-memory-drawing-the-vm-diagram/)
 - 第四篇:[Hack the Virtual Memory: malloc, the heap & the program break](https://blog.holbertonschool.com/hack-the-virtual-memory-malloc-the-heap-the-program-break/)
 
-## 原文链接 ##
+## 九、原文链接 ##
 [Hack The Virtual Memory: Python bytes](https://blog.holbertonschool.com/hack-the-virtual-memory-python-bytes/)
