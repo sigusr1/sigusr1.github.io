@@ -712,10 +712,11 @@ julien@holberton:~$
 
 ## 十、继续阅读 ##
 
+
 - 第一篇:[虚拟内存探究 -- 第一篇:C strings & /proc](https://sigusr1.github.io/2017/10/12/Virtual_Memory_C_strings_proc/)
-- 第二篇:[虚拟内存探究 -- 第二篇:Python 字节](https://blog.holbertonschool.com/hack-the-virtual-memory-python-bytes/)
-- 第三篇:[Hack The Virtual Memory: Drawing the VM diagram](https://blog.holbertonschool.com/hack-the-virtual-memory-drawing-the-vm-diagram/)
-- 第四篇:[Hack the Virtual Memory: malloc, the heap & the program break](https://blog.holbertonschool.com/hack-the-virtual-memory-malloc-the-heap-the-program-break/)
+- 第二篇:[虚拟内存探究 -- 第二篇:Python 字节](https://sigusr1.github.io/2017/10/15/Virtual_Memory_python_bytes/)
+- 第三篇:[虚拟内存探究 -- 第三篇:一步一步画虚拟内存图](https://sigusr1.github.io/2017/10/15/Virtual_Memory_drawing_VM_diagram/)
+- 第四篇:[虚拟内存探究 -- 第四篇:malloc, heap & the program break](https://sigusr1.github.io/2017/10/18/Virtual_Memory_malloc_and_heap/)
 
 ## 十一、原文链接 ##
 [Hack The Virtual Memory: Drawing the VM diagram](https://blog.holbertonschool.com/hack-the-virtual-memory-drawing-the-vm-diagram/)
