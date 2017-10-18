@@ -1172,12 +1172,12 @@ NULL may also be returned by a successful call to malloc() with a size of zero
 ```
 
 
-## 九、结尾 ##
+## 十、结尾 ##
 本文我们学校了有关`malloc`和堆的许多知识。但实际上远不止`brk`和`sbrk`，你可以试着分配一大块内存，并用`strace`跟踪下，然后查看`/proc`系列文件，这都是有待进一步探究的。
 
 另外，`free`函数是怎么和`malloc`函数协作的，这也是有待进一步探究的。 这会让你明白为什么最小的内存块是`32`字节而不是`16`字节，或者`0`字节。
 
-## 十、继续阅读 ##
+## 十一、继续阅读 ##
 
 
 - 第一篇:[虚拟内存探究 -- 第一篇:C strings & /proc](https://sigusr1.github.io/2017/10/12/Virtual_Memory_C_strings_proc/)
@@ -1185,5 +1185,5 @@ NULL may also be returned by a successful call to malloc() with a size of zero
 - 第三篇:[虚拟内存探究 -- 第三篇:一步一步画虚拟内存图](https://sigusr1.github.io/2017/10/15/Virtual_Memory_drawing_VM_diagram/)
 - 第四篇:[虚拟内存探究 -- 第四篇:malloc, heap & the program break](https://sigusr1.github.io/2017/10/18/Virtual_Memory_malloc_and_heap/)
 
-## 十一、原文链接 ##
+## 十二、原文链接 ##
 [Hack the Virtual Memory: malloc, the heap & the program break](https://blog.holbertonschool.com/hack-the-virtual-memory-malloc-the-heap-the-program-break/)
