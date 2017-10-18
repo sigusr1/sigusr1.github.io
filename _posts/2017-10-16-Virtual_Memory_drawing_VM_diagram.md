@@ -1,7 +1,7 @@
 ---
 layout: post  
 title:  "虚拟内存探究 -- 第三篇:一步一步画虚拟内存图"  
-date:   2017-10-15
+date:   2017-10-16
 categories: 翻译  
 tags: 虚拟内存 翻译 
 author: sigusr1  
