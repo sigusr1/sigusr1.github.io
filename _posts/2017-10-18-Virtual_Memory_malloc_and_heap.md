@@ -12,7 +12,7 @@ mathjax: true
 * content
 {:toc}
 这是虚拟内存系列文章的第四篇，也是最后一篇。  
-本文主要介绍malloc和heap相关知识，以便回答[上一篇文章](https://sigusr1.github.io/2017/10/15/Virtual_Memory_drawing_VM_diagram/)结尾提出的一些问题:
+本文主要介绍malloc和heap相关知识，以便回答[上一篇文章](https://sigusr1.github.io/2017/10/16/Virtual_Memory_drawing_VM_diagram/)结尾提出的一些问题:
 
 - 动态分配的内存为何不是从堆的起始位置`0x2050000`开始，而是偏移16个字节从`0x2050010`开始？这16个字节是什么用途?
 - 堆真的是向上生长的吗?
@@ -224,7 +224,7 @@ julien@holberton:/proc/3834$
 ```
 可以看到: `024d6000` < `0x24d6010` < `024f7000`， 因此`malloc`返回的内存地址是在堆上的。
 
-另外, 和[上一篇文章](https://sigusr1.github.io/2017/10/15/Virtual_Memory_drawing_VM_diagram/)中看到的一样，地址并未从堆的起始地址(`024d6000`)开始分配，而是偏移了`16`个字节，从`0x24d6010`开始。我们后面再讨论这个问题。
+另外, 和[上一篇文章](https://sigusr1.github.io/2017/10/16/Virtual_Memory_drawing_VM_diagram/)中看到的一样，地址并未从堆的起始地址(`024d6000`)开始分配，而是偏移了`16`个字节，从`0x24d6010`开始。我们后面再讨论这个问题。
 
 ## 四、strace, brk 和 sbrk ##
 
@@ -1182,7 +1182,7 @@ NULL may also be returned by a successful call to malloc() with a size of zero
 
 - 第一篇:[虚拟内存探究 -- 第一篇:C strings & /proc](https://sigusr1.github.io/2017/10/12/Virtual_Memory_C_strings_proc/)
 - 第二篇:[虚拟内存探究 -- 第二篇:Python 字节](https://sigusr1.github.io/2017/10/15/Virtual_Memory_python_bytes/)
-- 第三篇:[虚拟内存探究 -- 第三篇:一步一步画虚拟内存图](https://sigusr1.github.io/2017/10/15/Virtual_Memory_drawing_VM_diagram/)
+- 第三篇:[虚拟内存探究 -- 第三篇:一步一步画虚拟内存图](https://sigusr1.github.io/2017/10/16/Virtual_Memory_drawing_VM_diagram/)
 - 第四篇:[虚拟内存探究 -- 第四篇:malloc, heap & the program break](https://sigusr1.github.io/2017/10/18/Virtual_Memory_malloc_and_heap/)
 
 ## 十二、原文链接 ##
