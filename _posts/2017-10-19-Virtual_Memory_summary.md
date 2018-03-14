@@ -15,7 +15,7 @@ mathjax: true
 想知道下面这张进程地址空间示意图是如何一步一步画出来的吗？  
 《虚拟内存探究》系列文章将通过实验的方式带你学习相关知识。  
 
-![](http://34.210.34.184:8888/blog/virtual_memory/virtual_memory_diagram_v2.png)
+![](http://data.coderhuo.tech/blog/virtual_memory/virtual_memory_diagram_v2.png)
 
 
 

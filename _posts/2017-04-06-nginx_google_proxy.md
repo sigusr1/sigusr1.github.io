@@ -25,7 +25,8 @@ mathjax: true
 ## 2. 下载源码 ##
 
 ```
-wget  http://artfiles.org/openssl.org/source/openssl-1.1.0e.tar.gz
+wget https://codeload.github.com/openssl/openssl/zip/OpenSSL_1_1_0e -O OpenSSL_1_1_0e.zip
+
 wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.39.tar.gz
 wget http://zlib.net/zlib-1.2.11.tar.gz
 
@@ -36,10 +37,15 @@ git clone https://github.com/yaoweibin/ngx_http_substitutions_filter_module
 
 pcre版本不要太新，否则后面编译会有问题。
 ## 3. 编译安装 ##
-解压后，在nginx根目录下编译安装：
+
+进入nginx目录，执行```git checkout release-1.13.9```选定版本  
+进入ngx_http_google_filter_module目录，执行```git checkout 0.2.0```选定版本  
+进入ngx_http_substitutions_filter_module目录，执行```git checkout v0.6.4```选定版本  
+
+解压其他压缩包后，在nginx根目录下编译安装：
 
 ```
- ./auto/configure --with-pcre=../pcre-8.39 --with-openssl=../openssl-1.1.0e --with-zlib=../zlib-1.2.11 --with-http_ssl_module --add-module=../ngx_http_google_filter_module --add-module=../ngx_http_substitutions_filter_module
+ ./auto/configure --with-pcre=../pcre-8.39 --with-openssl=../openssl-OpenSSL_1_1_0e --with-zlib=../zlib-1.2.11 --with-http_ssl_module --add-module=../ngx_http_google_filter_module --add-module=../ngx_http_substitutions_filter_module
 
 make -j 4
 
@@ -87,10 +93,10 @@ sudo /usr/local/nginx/sbin/nginx
 在服务端和客户端抓包可以看到，被和谐了，有个“中间人”同时对Server和Client都发送了RST报文。
 
 网络拓扑如下：
-![nginx代理网络拓扑图.jpg](http://34.210.34.184:8888/blog/nginx%B4%FA%C0%ED%CD%F8%C2%E7%CD%D8%C6%CB%CD%BC.jpg)
+![nginx代理网络拓扑图.jpg](http://data.coderhuo.tech/blog/nginx%B4%FA%C0%ED%CD%F8%C2%E7%CD%D8%C6%CB%CD%BC.jpg)
 
 报文如下：
-![nginx代理中间人断开连接.jpg](http://34.210.34.184:8888/blog/nginx%B4%FA%C0%ED%D6%D0%BC%E4%C8%CB%B6%CF%BF%AA%C1%AC%BD%D3.jpg)
+![nginx代理中间人断开连接.jpg](http://data.coderhuo.tech/blog/nginx%B4%FA%C0%ED%D6%D0%BC%E4%C8%CB%B6%CF%BF%AA%C1%AC%BD%D3.jpg)
 
 
 

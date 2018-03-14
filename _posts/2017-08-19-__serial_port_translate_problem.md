@@ -21,7 +21,7 @@ mathjax: true
   
 设备A和设备B通过串口通讯，如下图所示。使用COBS进行编解码主要是为了报文分割（解决粘包半包问题）。  
 
-![通信示意图](http://34.210.34.184:8888/blog/%B4%AE%BF%DA%D7%AA%D2%E5.jpg)
+![通信示意图](http://data.coderhuo.tech/blog/%B4%AE%BF%DA%D7%AA%D2%E5.jpg)
   
 
 开发和测试期间，A和B之间通信均正常。等到A设备批量生产的时候，极个别A设备和B无法正常通信。  

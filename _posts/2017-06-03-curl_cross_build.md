@@ -20,7 +20,7 @@ arm平台curl交叉编译方法。
 
 编译目录结构如下:
 
-![目录结构图](http://34.210.34.184:8888/blog/curl%B1%E0%D2%EB%C4%BF%C2%BC%BD%E1%B9%B9%CD%BC.jpg)
+![目录结构图](http://data.coderhuo.tech/blog/curl%B1%E0%D2%EB%C4%BF%C2%BC%BD%E1%B9%B9%CD%BC.jpg)
 
 其中curl-7.29.0、openssl-OpenSSL\_1\_0\_2g和zlib-1.2.8是待编译的源码。libs用来存放编译出来的库以及头文件。
 
