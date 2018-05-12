@@ -25,5 +25,7 @@ mathjax: true
 这是GitBook上发现的讲网络基本知识的书籍，很不错。  
 项目地址:[https://www.gitbook.com/book/wizardforcel/network-basic](https://www.gitbook.com/book/wizardforcel/network-basic)
 
+## 3. [《谈一谈网络编程学习经验》](http://data.coderhuo.tech/books/tech/LearningNetworkProgramming.pdf) ##
+陈硕写的关于网络学习的一些经验，相当好，对初学、进阶均有帮助。
 
 
