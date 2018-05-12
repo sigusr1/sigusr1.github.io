@@ -4,7 +4,7 @@ title:  "移位溢出"
 date:   2017-09-23  
 categories: C/C++  
 tags: 移位 溢出  
-author: sigusr1  
+author: coderhuo  
 mathjax: true  
 ---
 

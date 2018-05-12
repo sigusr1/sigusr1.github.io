@@ -4,7 +4,7 @@ title:  "ARM下char类型符号问题"
 date:   2017-03-19  
 categories: C/C++  
 tags: arm char signed unsigned  
-author: sigusr1  
+author: coderhuo  
 mathjax: true  
 ---
 

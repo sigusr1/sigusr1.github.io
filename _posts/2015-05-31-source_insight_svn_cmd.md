@@ -4,7 +4,7 @@ title:  " Source Insight集成svn命令，打开当前文件夹命令"
 date:   2015-05-31  
 categories: 工具  
 tags: 工具  效率
-author: sigusr1  
+author: coderhuo  
 mathjax: true  
 ---
 

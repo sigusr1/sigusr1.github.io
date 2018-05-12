@@ -4,7 +4,7 @@ title:  "串口通信中ICRNL惹的祸"
 date:   2017-08-27  
 categories: C/C++  
 tags: 串口 转义 termios  
-author: sigusr1  
+author: coderhuo  
 mathjax: true  
 ---
 

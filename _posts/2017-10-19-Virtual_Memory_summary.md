@@ -4,7 +4,7 @@ title:  "虚拟内存探究，深入理解进程地址空间"
 date:   2017-10-19
 categories: 翻译  
 tags: 虚拟内存 翻译 
-author: sigusr1  
+author: coderhuo  
 mathjax: true  
 ---
 
@@ -26,10 +26,10 @@ mathjax: true
 
 ## 中文版 ###
 
-- 第一篇:[虚拟内存探究 -- 第一篇:C strings & /proc](https://sigusr1.github.io/2017/10/12/Virtual_Memory_C_strings_proc/)
-- 第二篇:[虚拟内存探究 -- 第二篇:Python 字节](https://sigusr1.github.io/2017/10/15/Virtual_Memory_python_bytes/)
-- 第三篇:[虚拟内存探究 -- 第三篇:一步一步画虚拟内存图](https://sigusr1.github.io/2017/10/16/Virtual_Memory_drawing_VM_diagram/)
-- 第四篇:[虚拟内存探究 -- 第四篇:malloc, heap & the program break](https://sigusr1.github.io/2017/10/18/Virtual_Memory_malloc_and_heap/)
+- 第一篇:[虚拟内存探究 -- 第一篇:C strings & /proc](http://blog.coderhuo.tech/2017/10/12/Virtual_Memory_C_strings_proc/)
+- 第二篇:[虚拟内存探究 -- 第二篇:Python 字节](http://blog.coderhuo.tech/2017/10/15/Virtual_Memory_python_bytes/)
+- 第三篇:[虚拟内存探究 -- 第三篇:一步一步画虚拟内存图](http://blog.coderhuo.tech/2017/10/16/Virtual_Memory_drawing_VM_diagram/)
+- 第四篇:[虚拟内存探究 -- 第四篇:malloc, heap & the program break](http://blog.coderhuo.tech/2017/10/18/Virtual_Memory_malloc_and_heap/)
 
 
 ## 英文版 ###

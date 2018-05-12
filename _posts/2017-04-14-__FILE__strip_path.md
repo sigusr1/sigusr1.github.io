@@ -4,7 +4,7 @@ title:  "去掉宏__FILE__的路径"
 date:   2017-04-14  
 categories: C/C++  
 tags: __FILE__ 路径  
-author: sigusr1  
+author: coderhuo  
 mathjax: true  
 ---
 

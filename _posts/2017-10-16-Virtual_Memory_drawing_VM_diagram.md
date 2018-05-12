@@ -4,7 +4,7 @@ title:  "虚拟内存探究 -- 第三篇:一步一步画虚拟内存图"
 date:   2017-10-16
 categories: 翻译  
 tags: 虚拟内存 翻译 
-author: sigusr1  
+author: coderhuo  
 mathjax: true  
 ---
 
@@ -30,7 +30,7 @@ mathjax: true
 - C语言基础
 - 一些汇编知识（非必需）
 - 了解Linux的文件系统和shell命令
-- 了解文件`/proc/[pid]/maps`（可参阅`man proc`或[《虚拟内存探究 -- 第一篇:C strings & /proc》](https://sigusr1.github.io/2017/10/12/Virtual_Memory_C_strings_proc/)中的相关介绍）
+- 了解文件`/proc/[pid]/maps`（可参阅`man proc`或[《虚拟内存探究 -- 第一篇:C strings & /proc》](http://blog.coderhuo.tech/2017/10/12/Virtual_Memory_C_strings_proc/)中的相关介绍）
 
 ## 二、实验环境 ##
 所有的脚本和程序都在下面的环境中测试过：  
@@ -550,7 +550,7 @@ julien@holberton:~/holberton/w/hackthevm2$
 
 ## 八、/proc ##
 
-我们通过`/proc/[pid]/maps`（可参阅`man proc`或[《虚拟内存探究 -- 第一篇:C strings & /proc》](https://sigusr1.github.io/2017/10/12/Virtual_Memory_C_strings_proc/)中的相关介绍）再次确认之前得到的结论是否正确。
+我们通过`/proc/[pid]/maps`（可参阅`man proc`或[《虚拟内存探究 -- 第一篇:C strings & /proc》](http://blog.coderhuo.tech/2017/10/12/Virtual_Memory_C_strings_proc/)中的相关介绍）再次确认之前得到的结论是否正确。
 
 
 我们在(`main-6.c`)的基础上添加个`getchar()`函数以便暂停程序的执行，有时间查看`/proc`(`main-7.c`)：
@@ -713,10 +713,10 @@ julien@holberton:~$
 ## 十、继续阅读 ##
 
 
-- 第一篇:[虚拟内存探究 -- 第一篇:C strings & /proc](https://sigusr1.github.io/2017/10/12/Virtual_Memory_C_strings_proc/)
-- 第二篇:[虚拟内存探究 -- 第二篇:Python 字节](https://sigusr1.github.io/2017/10/15/Virtual_Memory_python_bytes/)
-- 第三篇:[虚拟内存探究 -- 第三篇:一步一步画虚拟内存图](https://sigusr1.github.io/2017/10/16/Virtual_Memory_drawing_VM_diagram/)
-- 第四篇:[虚拟内存探究 -- 第四篇:malloc, heap & the program break](https://sigusr1.github.io/2017/10/18/Virtual_Memory_malloc_and_heap/)
+- 第一篇:[虚拟内存探究 -- 第一篇:C strings & /proc](http://blog.coderhuo.tech/2017/10/12/Virtual_Memory_C_strings_proc/)
+- 第二篇:[虚拟内存探究 -- 第二篇:Python 字节](http://blog.coderhuo.tech/2017/10/15/Virtual_Memory_python_bytes/)
+- 第三篇:[虚拟内存探究 -- 第三篇:一步一步画虚拟内存图](http://blog.coderhuo.tech/2017/10/16/Virtual_Memory_drawing_VM_diagram/)
+- 第四篇:[虚拟内存探究 -- 第四篇:malloc, heap & the program break](http://blog.coderhuo.tech/2017/10/18/Virtual_Memory_malloc_and_heap/)
 
 ## 十一、原文链接 ##
 [Hack The Virtual Memory: Drawing the VM diagram](https://blog.holbertonschool.com/hack-the-virtual-memory-drawing-the-vm-diagram/)

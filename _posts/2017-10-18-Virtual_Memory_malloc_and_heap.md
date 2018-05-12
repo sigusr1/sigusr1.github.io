@@ -4,7 +4,7 @@ title:  "虚拟内存探究 -- 第四篇:malloc, heap & the program break"
 date:   2017-10-18
 categories: 翻译  
 tags: 虚拟内存 翻译 
-author: sigusr1  
+author: coderhuo  
 mathjax: true  
 ---
 
@@ -12,7 +12,7 @@ mathjax: true
 * content
 {:toc}
 这是虚拟内存系列文章的第四篇，也是最后一篇。  
-本文主要介绍malloc和heap相关知识，以便回答[上一篇文章](https://sigusr1.github.io/2017/10/16/Virtual_Memory_drawing_VM_diagram/)结尾提出的一些问题:
+本文主要介绍malloc和heap相关知识，以便回答[上一篇文章](http://blog.coderhuo.tech/2017/10/16/Virtual_Memory_drawing_VM_diagram/)结尾提出的一些问题:
 
 - 动态分配的内存为何不是从堆的起始位置`0x2050000`开始，而是偏移16个字节从`0x2050010`开始？这16个字节是什么用途?
 - 堆真的是向上生长的吗?
@@ -31,7 +31,7 @@ mathjax: true
 
 - C语言基础(特别是指针相关知识)
 - 了解Linux的文件系统和shell命令
-- 了解文件`/proc/[pid]/maps`（可参阅`man proc`或[《虚拟内存探究 -- 第一篇:C strings & /proc》](https://sigusr1.github.io/2017/10/12/Virtual_Memory_C_strings_proc/)中的相关介绍）
+- 了解文件`/proc/[pid]/maps`（可参阅`man proc`或[《虚拟内存探究 -- 第一篇:C strings & /proc》](http://blog.coderhuo.tech/2017/10/12/Virtual_Memory_C_strings_proc/)中的相关介绍）
 
 ## 二、实验环境 ##
 所有的脚本和程序都在下面的环境中测试过：  
@@ -93,7 +93,7 @@ julien@holberton:~/holberton/w/hackthevm3$ gcc -Wall -Wextra -pedantic -Werror 0
 julien@holberton:~/holberton/w/hackthevm3$ ./0 
 ```
 
-*提示：进程的内存分布情况在文件`/proc/[pid]/maps`文件中。为了查看该文件， 我们首先要知道进程的PID。可以通过命令`ps`查看进程ID。`ps aux`输出的第二列就是进程的PID，具体可参阅[《虚拟内存探究 -- 第一篇:C strings & /proc》](https://sigusr1.github.io/2017/10/12/Virtual_Memory_C_strings_proc/)中的相关介绍。*
+*提示：进程的内存分布情况在文件`/proc/[pid]/maps`文件中。为了查看该文件， 我们首先要知道进程的PID。可以通过命令`ps`查看进程ID。`ps aux`输出的第二列就是进程的PID，具体可参阅[《虚拟内存探究 -- 第一篇:C strings & /proc》](http://blog.coderhuo.tech/2017/10/12/Virtual_Memory_C_strings_proc/)中的相关介绍。*
 
 ```
 julien@holberton:/tmp$ ps aux | grep \ \./0$
@@ -224,7 +224,7 @@ julien@holberton:/proc/3834$
 ```
 可以看到: `024d6000` < `0x24d6010` < `024f7000`， 因此`malloc`返回的内存地址是在堆上的。
 
-另外, 和[上一篇文章](https://sigusr1.github.io/2017/10/16/Virtual_Memory_drawing_VM_diagram/)中看到的一样，地址并未从堆的起始地址(`024d6000`)开始分配，而是偏移了`16`个字节，从`0x24d6010`开始。我们后面再讨论这个问题。
+另外, 和[上一篇文章](http://blog.coderhuo.tech/2017/10/16/Virtual_Memory_drawing_VM_diagram/)中看到的一样，地址并未从堆的起始地址(`024d6000`)开始分配，而是偏移了`16`个字节，从`0x24d6010`开始。我们后面再讨论这个问题。
 
 ## 四、strace, brk 和 sbrk ##
 
@@ -1180,10 +1180,10 @@ NULL may also be returned by a successful call to malloc() with a size of zero
 ## 十一、继续阅读 ##
 
 
-- 第一篇:[虚拟内存探究 -- 第一篇:C strings & /proc](https://sigusr1.github.io/2017/10/12/Virtual_Memory_C_strings_proc/)
-- 第二篇:[虚拟内存探究 -- 第二篇:Python 字节](https://sigusr1.github.io/2017/10/15/Virtual_Memory_python_bytes/)
-- 第三篇:[虚拟内存探究 -- 第三篇:一步一步画虚拟内存图](https://sigusr1.github.io/2017/10/16/Virtual_Memory_drawing_VM_diagram/)
-- 第四篇:[虚拟内存探究 -- 第四篇:malloc, heap & the program break](https://sigusr1.github.io/2017/10/18/Virtual_Memory_malloc_and_heap/)
+- 第一篇:[虚拟内存探究 -- 第一篇:C strings & /proc](http://blog.coderhuo.tech/2017/10/12/Virtual_Memory_C_strings_proc/)
+- 第二篇:[虚拟内存探究 -- 第二篇:Python 字节](http://blog.coderhuo.tech/2017/10/15/Virtual_Memory_python_bytes/)
+- 第三篇:[虚拟内存探究 -- 第三篇:一步一步画虚拟内存图](http://blog.coderhuo.tech/2017/10/16/Virtual_Memory_drawing_VM_diagram/)
+- 第四篇:[虚拟内存探究 -- 第四篇:malloc, heap & the program break](http://blog.coderhuo.tech/2017/10/18/Virtual_Memory_malloc_and_heap/)
 
 ## 十二、原文链接 ##
 [Hack the Virtual Memory: malloc, the heap & the program break](https://blog.holbertonschool.com/hack-the-virtual-memory-malloc-the-heap-the-program-break/)

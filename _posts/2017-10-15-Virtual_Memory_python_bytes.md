@@ -4,7 +4,7 @@ title:  "虚拟内存探究 -- 第二篇:Python 字节"
 date:   2017-10-15
 categories: 翻译  
 tags: 虚拟内存 翻译 
-author: sigusr1  
+author: coderhuo  
 mathjax: true  
 ---
 
@@ -12,7 +12,7 @@ mathjax: true
 * content
 {:toc}
 这是虚拟内存系列文章的第二篇。  
-这次我们要做的事情和[《虚拟内存探究 -- 第一篇:C strings & /proc》](https://sigusr1.github.io/2017/10/12/Virtual_Memory_C_strings_proc/)类似，不同的是我们将访问Python 3 脚本的虚拟内存。这会比较费劲， 所以我们需要了解Pyhton3 内部的一些机制。
+这次我们要做的事情和[《虚拟内存探究 -- 第一篇:C strings & /proc》](http://blog.coderhuo.tech/2017/10/12/Virtual_Memory_C_strings_proc/)类似，不同的是我们将访问Python 3 脚本的虚拟内存。这会比较费劲， 所以我们需要了解Pyhton3 内部的一些机制。
 
 
 
@@ -21,14 +21,14 @@ mathjax: true
 
 
 ## 一、预备知识 ##
-本文基于上一篇文章[《虚拟内存探究 -- 第一篇:C strings & /proc》](https://sigusr1.github.io/2017/10/12/Virtual_Memory_C_strings_proc/)中所讲的知识， 所以，在继续阅读本文前，请确保阅读并理解上一篇文章。  
+本文基于上一篇文章[《虚拟内存探究 -- 第一篇:C strings & /proc》](http://blog.coderhuo.tech/2017/10/12/Virtual_Memory_C_strings_proc/)中所讲的知识， 所以，在继续阅读本文前，请确保阅读并理解上一篇文章。  
 
 为了方便理解本文，你需要具备以下知识：  
 
 - C语言基础
 - 些许Python知识
 - 了解Linux的文件系统和shell命令
-- `/proc`文件系统的基本知识（可参阅[《虚拟内存探究 -- 第一篇:C strings & /proc》](https://sigusr1.github.io/2017/10/12/Virtual_Memory_C_strings_proc/)中的相关介绍）
+- `/proc`文件系统的基本知识（可参阅[《虚拟内存探究 -- 第一篇:C strings & /proc》](http://blog.coderhuo.tech/2017/10/12/Virtual_Memory_C_strings_proc/)中的相关介绍）
 
 ## 二、实验环境 ##
 所有的脚本和程序都在下面的环境中测试过：  
@@ -90,7 +90,7 @@ Pyhton中的整数、字符串、字节、函数等等， 都是对象。所以�
 
 
 ### 对python脚本执行read_write_heap.py脚本 ###
-*提示：`read_write_heap.py`是[《虚拟内存探究 -- 第一篇:C strings & /proc》](https://sigusr1.github.io/2017/10/12/Virtual_Memory_C_strings_proc/)中的脚本，用来查找并替换内存中的字符串。*
+*提示：`read_write_heap.py`是[《虚拟内存探究 -- 第一篇:C strings & /proc》](http://blog.coderhuo.tech/2017/10/12/Virtual_Memory_C_strings_proc/)中的脚本，用来查找并替换内存中的字符串。*
 
 
 我们首先执行前面的脚本`main.py`：
@@ -172,7 +172,7 @@ julien@holberton:~/holberton/w/hackthevm1$
 
 字符串'Holberton'在堆上只出现了一次。那么脚本`main.py`所使用的字符串'Holberton'到底在哪里呢？Python的字节对象又是在内存的哪部分呢？有没有可能在栈上？我们可以把脚本`read_write_heap.py`中的`[heap]`改成`[stack]`试试看。
 
-*提示:文件`/proc/[pid]/maps`中标记为`[stack]`的部分就是栈， 具体可参阅上一篇文件[《虚拟内存探究 -- 第一篇:C strings & /proc》](https://sigusr1.github.io/2017/10/12/Virtual_Memory_C_strings_proc/)。*
+*提示:文件`/proc/[pid]/maps`中标记为`[stack]`的部分就是栈， 具体可参阅上一篇文件[《虚拟内存探究 -- 第一篇:C strings & /proc》](http://blog.coderhuo.tech/2017/10/12/Virtual_Memory_C_strings_proc/)。*
 
 改写栈的脚本`read_write_stack.py`如下， 它所做的和之前的脚本`read_write_heap.py`一样，唯一的不同是它访问进程的栈：
 
@@ -897,10 +897,10 @@ julien@holberton:~/holberton/w/hackthevm1$
 ## 八、继续阅读 ##
 
 
-- 第一篇:[虚拟内存探究 -- 第一篇:C strings & /proc](https://sigusr1.github.io/2017/10/12/Virtual_Memory_C_strings_proc/)
-- 第二篇:[虚拟内存探究 -- 第二篇:Python 字节](https://sigusr1.github.io/2017/10/15/Virtual_Memory_python_bytes/)
-- 第三篇:[虚拟内存探究 -- 第三篇:一步一步画虚拟内存图](https://sigusr1.github.io/2017/10/16/Virtual_Memory_drawing_VM_diagram/)
-- 第四篇:[虚拟内存探究 -- 第四篇:malloc, heap & the program break](https://sigusr1.github.io/2017/10/18/Virtual_Memory_malloc_and_heap/)
+- 第一篇:[虚拟内存探究 -- 第一篇:C strings & /proc](http://blog.coderhuo.tech/2017/10/12/Virtual_Memory_C_strings_proc/)
+- 第二篇:[虚拟内存探究 -- 第二篇:Python 字节](http://blog.coderhuo.tech/2017/10/15/Virtual_Memory_python_bytes/)
+- 第三篇:[虚拟内存探究 -- 第三篇:一步一步画虚拟内存图](http://blog.coderhuo.tech/2017/10/16/Virtual_Memory_drawing_VM_diagram/)
+- 第四篇:[虚拟内存探究 -- 第四篇:malloc, heap & the program break](http://blog.coderhuo.tech/2017/10/18/Virtual_Memory_malloc_and_heap/)
 
 ## 九、原文链接 ##
 [Hack The Virtual Memory: Python bytes](https://blog.holbertonschool.com/hack-the-virtual-memory-python-bytes/)

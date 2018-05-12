@@ -4,7 +4,7 @@ title:  "udhcp的几点总结"
 date:   2015-08-08  
 categories: 开源软件  
 tags: 开源 udhcpc udhcpd dhcp  
-author: sigusr1  
+author: coderhuo  
 mathjax: true  
 ---
 

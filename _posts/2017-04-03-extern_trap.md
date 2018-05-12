@@ -4,7 +4,7 @@ title:  "可怕的extern关键字"
 date:   2017-04-03  
 categories: C/C++  
 tags: C/C++ extern  
-author: sigusr1  
+author: coderhuo  
 mathjax: true  
 ---
 

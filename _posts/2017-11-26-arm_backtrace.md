@@ -4,7 +4,7 @@ title:  "arm平台根据栈进行backtrace的方法"
 date:   2017-11-26
 categories: 操作系统  
 tags: backtrace unwind arm 
-author: sigusr1  
+author: coderhuo  
 mathjax: true  
 ---
 

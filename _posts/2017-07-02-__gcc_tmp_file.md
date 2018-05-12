@@ -4,7 +4,7 @@ title:  "gcc编译临时文件存放路径"
 date:   2017-07-02  
 categories: C/C++  
 tags: gcc 临时文件 路径  
-author: sigusr1  
+author: coderhuo  
 mathjax: true  
 ---
 

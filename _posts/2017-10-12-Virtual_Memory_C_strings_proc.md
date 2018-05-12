@@ -4,7 +4,7 @@ title:  "虚拟内存探究 -- 第一篇:C strings & /proc"
 date:   2017-10-12
 categories: 翻译  
 tags: 虚拟内存 翻译 
-author: sigusr1  
+author: coderhuo  
 mathjax: true  
 ---
 
@@ -50,7 +50,7 @@ mathjax: true
 
 有关虚拟内存的知识, 可进一步阅读维基百科上的相关介绍：[虚拟内存](https://en.wikipedia.org/wiki/Virtual_memory)。
 
-在[虚拟内存探究 -- 第三篇:一步一步画虚拟内存图](https://sigusr1.github.io/2017/10/16/Virtual_Memory_drawing_VM_diagram/)中，我们将探索虚拟内存的更多细节，并且看下虚拟内存中都有些什么， 以及这些东西分别位于虚拟内存的什么地方。  
+在[虚拟内存探究 -- 第三篇:一步一步画虚拟内存图](http://blog.coderhuo.tech/2017/10/16/Virtual_Memory_drawing_VM_diagram/)中，我们将探索虚拟内存的更多细节，并且看下虚拟内存中都有些什么， 以及这些东西分别位于虚拟内存的什么地方。  
 
 继续阅读本文前, 你需要知道以下几点:
 
@@ -646,10 +646,10 @@ julien@holberton:~/holberton/w/hackthevm0$
 
 ## 七、继续阅读 ##
 
-- 第一篇:[虚拟内存探究 -- 第一篇:C strings & /proc](https://sigusr1.github.io/2017/10/12/Virtual_Memory_C_strings_proc/)
-- 第二篇:[虚拟内存探究 -- 第二篇:Python 字节](https://sigusr1.github.io/2017/10/15/Virtual_Memory_python_bytes/)
-- 第三篇:[虚拟内存探究 -- 第三篇:一步一步画虚拟内存图](https://sigusr1.github.io/2017/10/16/Virtual_Memory_drawing_VM_diagram/)
-- 第四篇:[虚拟内存探究 -- 第四篇:malloc, heap & the program break](https://sigusr1.github.io/2017/10/18/Virtual_Memory_malloc_and_heap/)
+- 第一篇:[虚拟内存探究 -- 第一篇:C strings & /proc](http://blog.coderhuo.tech/2017/10/12/Virtual_Memory_C_strings_proc/)
+- 第二篇:[虚拟内存探究 -- 第二篇:Python 字节](http://blog.coderhuo.tech/2017/10/15/Virtual_Memory_python_bytes/)
+- 第三篇:[虚拟内存探究 -- 第三篇:一步一步画虚拟内存图](http://blog.coderhuo.tech/2017/10/16/Virtual_Memory_drawing_VM_diagram/)
+- 第四篇:[虚拟内存探究 -- 第四篇:malloc, heap & the program break](http://blog.coderhuo.tech/2017/10/18/Virtual_Memory_malloc_and_heap/)
 
 ## 八、原文链接 ##
 [Hack The Virtual Memory: C strings & /proc](https://blog.holbertonschool.com/hack-the-virtual-memory-c-strings-proc/)
