@@ -81,7 +81,7 @@ int common_printf(const char *format, ...)
     return platform_a_printf(format, ...);
 }
 ```
-
+##  适配方法  ##
 
 ###  方法一：通过va_list传递变参  ###
 
@@ -176,7 +176,7 @@ int (*common_printf)(const char *format, ...) = platform_b_printf;
 ```
 这样头文件和编译脚本中都不需要特殊处理，只需要在平台适配层做区分即可。
 
-###  性能分析  ###
+##  性能分析  ##
 
 方法二由于是编译期就搞定的，无额外消耗，性能最优。  
 方法一性能最差，因为额外增加的操作太多。  
