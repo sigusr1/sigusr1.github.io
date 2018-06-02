@@ -28,4 +28,5 @@ mathjax: true
 ## 3. [《谈一谈网络编程学习经验》](http://data.coderhuo.tech/books/tech/LearningNetworkProgramming.pdf) ##
 陈硕写的关于网络学习的一些经验，相当好，对初学、进阶均有帮助。
 
-
+##4. [《编写可读代码的艺术》](http://data.coderhuo.tech/books/tech/%B1%E0%D0%B4%BF%C9%B6%C1%B4%FA%C2%EB%B5%C4%D2%D5%CA%F5.pdf) ##
+《The Art of Readable Code》，书如其名，结合实际例子来讲如何提高代码的可读性。
