@@ -52,17 +52,17 @@
 
 {% if site.git_comment %}
 <div id="container"></div>
-<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
-<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
 <script>
-var gitment = new Gitment({
-  id: 'location.href', // 可选。默认为 location.href
-  owner: 'sigusr1',
+var gitalk = new Gitalk({
+  clientID: 'd216c15e8f259bfa6703',
+  clientSecret: '3d2136589440fcffd21a57db123532ee0bb96f38',
   repo: 'blog_comment',
-  oauth: {
-    client_id: 'd216c15e8f259bfa6703',
-    client_secret: '3d2136589440fcffd21a57db123532ee0bb96f38',
-  },
+  owner: 'sigusr1',
+  admin: ['sigusr1'],
+  id: window.location.pathname,      // Ensure uniqueness and length less than 50
+  distractionFreeMode: false  // Facebook-like distraction free mode
 })
-gitment.render('container')
+gitalk.render('container')
 </script>{% endif %}
