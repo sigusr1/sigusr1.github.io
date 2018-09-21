@@ -31,8 +31,8 @@ email: wtx05@126.com
 #duoshuo_shortname: 
 #disqus_shortname: 
 
-#remark评论: 
-commnet_remark: True
+#git_comment评论: 
+git_comment: True
 
 # statistic analysis 统计代码
 # 百度统计 id，将统计代码替换为自己的百度统计id，即
