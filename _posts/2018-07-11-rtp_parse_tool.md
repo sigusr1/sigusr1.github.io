@@ -1,6 +1,6 @@
 ---
 layout: post  
-title:  "工具分享--分析RTP码流卡顿问题的工具"  
+title:  "分析RTP码流卡顿问题的工具"  
 date:   2018-07-11  
 categories: 工具  
 tags: 工具 问题分析 分享
