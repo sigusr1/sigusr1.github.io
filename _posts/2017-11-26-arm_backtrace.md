@@ -172,7 +172,10 @@ void func(void)
 
 为了能在出问题的时候就把异常抛出，可以引入gcc的编译选项-fstack-protector/-fstack-protector-all/-fstack-protector-strong，它们会在栈帧之间插入特定的内容作为安全边界，函数返回的时候对该边界做校验，如果发现被修改就抛出异常。我们可以在异常处理函数中把PC指针打出来，从而知道死在那里了。同时还可以根据SP指针把栈内容打出来一部分，观察被踩的区域，结合代码人工排查。
 
-遗憾的是某些RTOS使用的编译工具链不支持栈保护编译选项，好在资[参考资料3](http://antoinealb.net/programming/2016/06/01/stack-smashing-protector-on-microcontrollers.html)中给出了一种实现方法。
+遗憾的是某些RTOS使用的编译工具链不支持栈保护编译选项，好在下面的资料给出了一种解决方法：
+
+- [英文版：http://antoinealb.net/programming/2016/06/01/stack-smashing-protector-on-microcontrollers.html](http://antoinealb.net/programming/2016/06/01/stack-smashing-protector-on-microcontrollers.html)
+- [中文版：http://blog.coderhuo.tech/2019/07/14/gcc_stack_protect_on_rtos/](http://blog.coderhuo.tech/2019/07/14/gcc_stack_protect_on_rtos/)
 
 栈保护有一定的局限性，并非所有的栈溢出问题都能被检测到，另外开启后执行的指令增多了，对性能或多或少会有影响。内部调试版本可以使用该方法定位相关问题。
 
