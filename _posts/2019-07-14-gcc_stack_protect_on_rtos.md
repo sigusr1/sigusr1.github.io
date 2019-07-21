@@ -10,9 +10,11 @@ mathjax: true
 
 * content
 {:toc}
+本文是对[http://antoinealb.net/programming/2016/06/01/stack-smashing-protector-on-microcontrollers.html](http://antoinealb.net/programming/2016/06/01/stack-smashing-protector-on-microcontrollers.html)的意译，中间插入了较多作者自己的理解，主要介绍如何在嵌入式实时操作系统（RTOS）中使用GCC的栈溢出保护功能(Stack Smashing Protection，简称SSP)，特别是编译器本身不支持的情况下。  
+
 C语言中，需要开发人员自己管理内存，不可避免的会引入一系列内存相关的BUG，比如：内存重复释放、野指针、栈溢出等。这些问题通常都比较难定位，因为出问题的地方一般都不是案发现场（比如A处发生内存越界写操作，可能在B处程序才异常）。  
 
-本文主要介绍如何在嵌入式实时操作系统（RTOS）中使用GCC的栈溢出保护功能(Stack Smashing Protection，简称SSP)，特别是编译器本身不支持的情况下。
+
 
 
 
@@ -100,4 +102,5 @@ SSP需要这两个符号才能正常工作：
 1. [https://mudongliang.github.io/2016/05/24/stack-protector.html](https://mudongliang.github.io/2016/05/24/stack-protector.html)
 2. [https://www.ibm.com/developerworks/cn/linux/l-cn-gccstack/index.html](https://www.ibm.com/developerworks/cn/linux/l-cn-gccstack/index.html)
 3. [http://antoinealb.net/programming/2016/06/01/stack-smashing-protector-on-microcontrollers.html](http://antoinealb.net/programming/2016/06/01/stack-smashing-protector-on-microcontrollers.html)
+4. [http://www.cbi.umn.edu/securitywiki/CBI_ComputerSecurity/MechanismCanary.html](http://www.cbi.umn.edu/securitywiki/CBI_ComputerSecurity/MechanismCanary.html)
 ​                
