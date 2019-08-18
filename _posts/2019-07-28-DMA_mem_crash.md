@@ -467,18 +467,21 @@ DMA会导致Cache一致性问题。如下图所示，CPU的运算操作会修改
 ![驱动层规避方案](http://data.coderhuo.tech/blog/DMA_mem_crash/bsp_solution.png)
 
 
-## 四、总结 ##
-本文涉及的定位手段如下：
+## 8 总结 ##
+本文涉及的知识点如下：
 1. backtrace回溯函数调用栈
-2. 内存打标记，及基于此的内存检测
-3. 基于MMU的内存保护方法
-4. Electric Fence（efence）
-5. 通过wrap链接选项替换系统函数
-6. 基于gcc的栈保护
-7. 硬件watchpoint
+2. 汇编代码分析
+3. 内存打标记，及基于此的内存非法访问检测
+4. 基于MMU的内存保护
+5. Electric Fence（efence）内存非法方法检测机制
+6. 通过wrap链接选项替换系统函数
+7. 基于GCC的栈溢出保护(SSP)功能
+8. 硬件watchpoint
+9. TheadX内存管理机制、信号量管理机制
+10. DMA、Cache一致性
 
 
-## 四、参考资料 ##
+## 9 参考资料 ##
 
 1. [ThreadX源码](https://github.com/RISCV-on-Microsemi-FPGA/ThreadX/tree/master/x-ware_platform/tx)
 2. [arm平台根据栈进行backtrace的方法](http://blog.coderhuo.tech/2017/11/26/arm_backtrace/) 
