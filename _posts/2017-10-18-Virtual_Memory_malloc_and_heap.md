@@ -11,7 +11,7 @@ mathjax: true
 
 * content
 {:toc}
-这是虚拟内存系列文章的第四篇，也是最后一篇。  
+这是虚拟内存系列文章的第四篇。  
 本文主要介绍malloc和heap相关知识，以便回答[上一篇文章](http://blog.coderhuo.tech/2017/10/16/Virtual_Memory_drawing_VM_diagram/)结尾提出的一些问题:
 
 - 动态分配的内存为何不是从堆的起始位置`0x2050000`开始，而是偏移16个字节从`0x2050010`开始？这16个字节是什么用途?
@@ -1179,11 +1179,11 @@ NULL may also be returned by a successful call to malloc() with a size of zero
 
 ## 十一、继续阅读 ##
 
-
 - 第一篇:[虚拟内存探究 -- 第一篇:C strings & /proc](http://blog.coderhuo.tech/2017/10/12/Virtual_Memory_C_strings_proc/)
 - 第二篇:[虚拟内存探究 -- 第二篇:Python 字节](http://blog.coderhuo.tech/2017/10/15/Virtual_Memory_python_bytes/)
 - 第三篇:[虚拟内存探究 -- 第三篇:一步一步画虚拟内存图](http://blog.coderhuo.tech/2017/10/16/Virtual_Memory_drawing_VM_diagram/)
 - 第四篇:[虚拟内存探究 -- 第四篇:malloc, heap & the program break](http://blog.coderhuo.tech/2017/10/18/Virtual_Memory_malloc_and_heap/)
+- 第五篇：[虚拟内存探究 -- 第五篇:The Stack, registers and assembly code](http://blog.coderhuo.tech/2019/08/31/Virtual_Memory_malloc_and_heap_stack_and_register/)
 
 ## 十二、原文链接 ##
 [Hack the Virtual Memory: malloc, the heap & the program break](https://blog.holbertonschool.com/hack-the-virtual-memory-malloc-the-heap-the-program-break/)
