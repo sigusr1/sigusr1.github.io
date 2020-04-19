@@ -125,7 +125,7 @@ AVTP的h264_payload是遵循RFC 6184规范（RTP Payload Format for H.264 Video�
 
 ![AVTP封装](http://data.coderhuo.tech/blog/avtp/avtp_pack.jpg)
 
-## 三、媒体同步 ##
+## 二、媒体同步 ##
 
 
 ### 3.1 AVTP Presentation Time ###
@@ -196,7 +196,7 @@ AVTP中有了展示时间戳，为什么还要加上h264_timestamp时间戳？
 
 在非交叉模式下，该值可填充也可不填充。
 
-## 五、参考资料 ##
+## 三、参考资料 ##
 
 1. [H264 over RTP 的打包](https://blog.csdn.net/u010178611/article/details/82592393)
 2. [Understanding IEEE’s deterministic AV bridging standards](https://www.embedded.com/understanding-ieees-deterministic-av-bridging-standards/)
