@@ -30,3 +30,6 @@ mathjax: true
 
 ## 4. [《编写可读代码的艺术》](http://data.coderhuo.tech/books/tech/%B1%E0%D0%B4%BF%C9%B6%C1%B4%FA%C2%EB%B5%C4%D2%D5%CA%F5.pdf) ##
 《The Art of Readable Code》，书如其名，结合实际例子来讲如何提高代码的可读性。
+
+## 5. [《软件工程思想》](http://data.coderhuo.tech/books/tech/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%80%9D%E6%83%B3/) ##
+畅销书《高质量C++/C编程指南》作者林锐出品，这里有篇博客摘录了其中的精华片段，可供参考:[《软件工程思想》--赏析](http://blog.coderhuo.tech/2020/05/10/software_project/)。
