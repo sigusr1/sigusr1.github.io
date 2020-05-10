@@ -1,0 +1,6 @@
+I"�<p>这是虚拟内存系列文章的第三篇。<br />
+前面我们提到在进程的虚拟内存中可以找到哪些东西，以及在哪里去找。<br />
+本文我们将通过打印程序中不同元素内存地址的方式，一步一步细化下面的虚拟内存图：</p>
+
+<p><img src="http://data.coderhuo.tech/blog/virtual_memory/virtual_memory.jpg" alt="虚拟内存示意图" /></p>
+:ET

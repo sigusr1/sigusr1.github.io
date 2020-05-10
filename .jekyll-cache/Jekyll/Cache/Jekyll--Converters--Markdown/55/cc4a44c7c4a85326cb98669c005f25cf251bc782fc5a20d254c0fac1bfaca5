@@ -1,0 +1,44 @@
+I"�
+<p>本文介绍如何去掉宏__FILE__的路径，只显示文件名。</p>
+
+<p>宏__FILE__展开后会带有路径信息，比如下面的代码：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include&lt;stdio.h&gt;
+#include&lt;stdlib.h&gt;
+
+int main()
+{
+	printf("file_name:%s\n", __FILE__);
+	return 0;
+}
+</code></pre></div></div>
+
+<p>如果Makefile内容如下:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CFALG = -Wall
+
+all: /home/helloworld/test.c
+	gcc $(CFALG) $&lt; -o test
+</code></pre></div></div>
+
+<p>编译运行，程序输出为：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>file_name:/home/helloworld/test.c
+</code></pre></div></div>
+
+<p>为了不让宏_<em>FILE__带有路径信息，可以在Makefile中重定义宏__FILE_</em>：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CFALG = -Wall
+CFALG += -U__FILE__ -D__FILE__='"$(subst $(dir $&lt;),,$&lt;)"'
+
+all: /home/helloworld/test.c
+	gcc $(CFALG) $&lt; -o test
+</code></pre></div></div>
+
+<p>编译运行，程序输出为：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>file_name:test.c
+</code></pre></div></div>
+
+<p>取消宏_<em>FILE__会产生编译警告，如果不想产生警告，可以考虑新建一个宏， 比如__FILENAME_</em>。</p>
+:ET

@@ -1,0 +1,32 @@
+I"/	<ul id="markdown-toc">
+  <li><a href="#中文版" id="markdown-toc-中文版">中文版</a></li>
+  <li><a href="#英文版" id="markdown-toc-英文版">英文版</a></li>
+</ul>
+
+<p>想了解堆栈等虚拟内存相关知识吗？<br />
+想知道下面这张进程地址空间示意图是如何一步一步画出来的吗？<br />
+《虚拟内存探究》系列文章将通过实验的方式带你学习相关知识。</p>
+
+<p><img src="http://data.coderhuo.tech/blog/virtual_memory/virtual_memory_diagram_v2.png" alt="" /></p>
+
+<h2 id="中文版">中文版</h2>
+
+<ul>
+  <li>第一篇:<a href="http://blog.coderhuo.tech/2017/10/12/Virtual_Memory_C_strings_proc/">虚拟内存探究 – 第一篇:C strings &amp; /proc</a></li>
+  <li>第二篇:<a href="http://blog.coderhuo.tech/2017/10/15/Virtual_Memory_python_bytes/">虚拟内存探究 – 第二篇:Python 字节</a></li>
+  <li>第三篇:<a href="http://blog.coderhuo.tech/2017/10/16/Virtual_Memory_drawing_VM_diagram/">虚拟内存探究 – 第三篇:一步一步画虚拟内存图</a></li>
+  <li>第四篇:<a href="http://blog.coderhuo.tech/2017/10/18/Virtual_Memory_malloc_and_heap/">虚拟内存探究 – 第四篇:malloc, heap &amp; the program break</a></li>
+  <li>第五篇:<a href="http://blog.coderhuo.tech/2019/08/31/Virtual_Memory_malloc_and_heap_stack_and_register/">虚拟内存探究 – 第五篇:The Stack, registers and assembly code</a></li>
+</ul>
+
+<h2 id="英文版">英文版</h2>
+
+<ul>
+  <li>Chapter 0:<a href="https://blog.holbertonschool.com/hack-the-virtual-memory-c-strings-proc/">Hack The Virtual Memory: C strings &amp; /proc</a></li>
+  <li>Chapter 1:<a href="https://blog.holbertonschool.com/hack-the-virtual-memory-python-bytes/">Hack The Virtual Memory: Python bytes</a></li>
+  <li>Chapter 2:<a href="https://blog.holbertonschool.com/hack-the-virtual-memory-drawing-the-vm-diagram/">Hack The Virtual Memory: Drawing the VM diagram</a></li>
+  <li>Chapter 3:<a href="https://blog.holbertonschool.com/hack-the-virtual-memory-malloc-the-heap-the-program-break/">Hack the Virtual Memory: malloc, the heap &amp; the program break</a></li>
+  <li>Chapter 4:<a href="https://github.com/holbertonschool/Hack-The-Virtual-Memory/tree/master/04.%20The%20Stack%2C%20registers%20and%20assembly%20code">Hack the Virtual Memory: The Stack, registers and assembly code</a></li>
+</ul>
+
+:ET

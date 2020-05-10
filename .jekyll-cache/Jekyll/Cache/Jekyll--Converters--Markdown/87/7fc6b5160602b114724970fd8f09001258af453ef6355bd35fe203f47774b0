@@ -1,0 +1,209 @@
+I"k:<ul id="markdown-toc">
+  <li><a href="#一音视频数据封装" id="markdown-toc-一音视频数据封装">一、音视频数据封装</a>    <ul>
+      <li><a href="#1-头部结构" id="markdown-toc-1-头部结构">1. 头部结构</a></li>
+      <li><a href="#2-payload结构" id="markdown-toc-2-payload结构">2. payload结构</a>        <ul>
+          <li><a href="#21-h264基础知识" id="markdown-toc-21-h264基础知识">2.1 H264基础知识</a></li>
+          <li><a href="#22-rtp基础知识" id="markdown-toc-22-rtp基础知识">2.2 RTP基础知识</a></li>
+          <li><a href="#23-avtp封装h264_payload" id="markdown-toc-23-avtp封装h264_payload">2.3 AVTP封装h264_payload</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#二媒体同步" id="markdown-toc-二媒体同步">二、媒体同步</a>    <ul>
+      <li><a href="#31-avtp-presentation-time" id="markdown-toc-31-avtp-presentation-time">3.1 AVTP Presentation Time</a></li>
+      <li><a href="#32-展示时间同步播放时间同步" id="markdown-toc-32-展示时间同步播放时间同步">3.2 展示时间同步（播放时间同步）</a></li>
+      <li><a href="#33-媒体时钟同步" id="markdown-toc-33-媒体时钟同步">3.3 媒体时钟同步</a></li>
+      <li><a href="#34-h264_timestamp" id="markdown-toc-34-h264_timestamp">3.4 h264_timestamp</a></li>
+    </ul>
+  </li>
+  <li><a href="#三参考资料" id="markdown-toc-三参考资料">三、参考资料</a></li>
+</ul>
+<p>本文是AVB系列文章的第三篇，主要介绍AVB协议族中的音视频传输协议AVTP(IEEE Std 1722-2016)。</p>
+
+<p>AVTP是个链路层传输协议，其主要作用有两个：</p>
+
+<ol>
+  <li><strong>音视频数据封装</strong>：将音视频数据封装成相应的格式在<strong>链路层</strong>传输。</li>
+  <li><strong>媒体同步</strong>：
+    <ul>
+      <li>媒体时钟同步：不同的媒体类型有自己的媒体时钟，这些媒体时钟都映射到gPTP时间（同一个时间坐标系），接收端可以轻松进行媒体时钟恢复。</li>
+      <li>展示时间同步(播放时间同步)：数据发送时指示接收方在未来的某个时间点播放，如果有多个接收者，它们就会在未来的同一时刻同时播放。</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="一音视频数据封装">一、音视频数据封装</h2>
+
+<p>AVTP是链路层的传输协议，并且是基于VLAN的，在以太网帧中的位置如下所示：</p>
+
+<p><img src="http://data.coderhuo.tech/blog/avtp/avtp_format.jpg" alt="AVTP报文格式" /></p>
+
+<p>针对不同的音视频格式，AVTP有不同的Header和Payload格式。（<em>注：AVTP的Header其实是分了几个层级的，包含通用部分和随音视频格式变化部分，这里不再详细介绍。</em>）</p>
+
+<p>本文主要基于H264介绍AVTP。</p>
+
+<h3 id="1-头部结构">1. 头部结构</h3>
+<p>下图是AVTP封装H264视频数据时的头部结构：</p>
+
+<p><img src="http://data.coderhuo.tech/blog/avtp/avtp_h264_header.jpg" alt="H264_AVTP_Header" /></p>
+
+<p>我们结合实际报文重点关注图中编号了的几个字段，上图编号和下图抓包中的编号一一对应：</p>
+<ol>
+  <li>subtype：AVTP子类型，本例为压缩视频格式，一般简称为CVF</li>
+  <li>tv:它用来指示字段5是否有效， 0代表无效，1代表有效；这是因为一个视频单元（NALU)会被拆分为多个AVTP包，规范要求只需要在最后一个AVTP包中添加时间戳即可。</li>
+  <li>sequence_num：包序号，供接收端判断是否丢包、乱序</li>
+  <li>stream_id：流id，用来标识本数据流。长度为64bit, 前48字节定义和MAC地址定义规则一致，大部分直接拿MAC地址作为前48bit，后16bit根据需要自定义分配。</li>
+  <li>avtp_timestamp: AVTP Presentation Time，后面专门介绍</li>
+  <li>format: 用来表明payload承载的音视频数据是自定义格式还是RFC规范定义的格式，本例中是RFC格式的视频。</li>
+  <li>format_subtype: payload承载的音视频数据子类型，本例中是H264格式。</li>
+  <li>M标志位：代表一个NALU的结束。如果一个NALU被拆分为多个AVTP报文，只有最后一个需要把M标志填写成1。</li>
+  <li>h264_timestamp: h264时间戳，后面专门介绍。</li>
+  <li>ptv：用来指示h264_timestamp字段是否有效。本例中未填写h264_timestamp，所以ptv均为0（抓包中未标记）。</li>
+</ol>
+
+<p><img src="http://data.coderhuo.tech/blog/avtp/avtp_h264_header_wireshark.jpg" alt="H264_AVTP_Header_wireshark" /></p>
+
+<h3 id="2-payload结构">2. payload结构</h3>
+
+<p>为了便于理解后续部分，我们首先简单介绍下H264和RTP相关知识。</p>
+
+<h4 id="21-h264基础知识">2.1 H264基础知识</h4>
+<p>H264帧由多个NALU单元组成，如下图所示，其中Start Code就是0x000001或0x00000001，NALU Header中包含该NALU的类型。</p>
+
+<p><img src="http://data.coderhuo.tech/blog/avtp/frame_struct.jpg" alt="H264帧结构" /></p>
+
+<p>H264帧分为I帧、P帧、B帧三类，其中：</p>
+
+<ul>
+  <li>I帧不存在帧间依赖，可以单独解码成像；</li>
+  <li>P帧依赖本帧前面的I帧或P帧（这种依赖是从I帧依次传递过来的，所以中间任何一帧出错都会导致后续帧出错）；</li>
+  <li>B帧不仅依赖前面的帧，还依赖后面的帧</li>
+</ul>
+
+<p>如果一个码流中只有I帧和P帧，这种码流属于<strong>非交叉编码模式</strong>（Non-interleaved mode），帧的解码顺序和显示顺序是一致的；如果码流中包含了B帧，就成为了<strong>交叉编码模式</strong>（Interleaved mode），帧的解码顺序和显示顺序就不一定是一致的了。</p>
+
+<p>下图中红色为I帧，蓝色为P帧，绿色为B帧。可以看到，第一个B帧在码流中的位置是2（Number in Stream order， 即解码顺序，从0开始），而显示顺序是1（Number in Display order，即显示顺序)。也就是说，它前面的P帧先解码，但要在它之后显示。</p>
+
+<p>B帧使得解码顺序和显示顺序不再一致。记住这一点对后面理解AVTP中的两个时间戳有帮助。</p>
+
+<p><img src="http://data.coderhuo.tech/blog/avtp/b_frame.jpg" alt="B帧解码显示示意图" /></p>
+
+<h4 id="22-rtp基础知识">2.2 RTP基础知识</h4>
+
+<p>RTP封装H264数据是以NALU为单位进行的，而不是以帧为单位进行的，相应规范是RFC 6184规范（RTP Payload Format for H.264 Video）。</p>
+
+<p>RTP打包模式有下面三种：</p>
+
+<ul>
+  <li>Single NAL unit mode：单NALU模式，适用 H.241。</li>
+  <li>Non-interleaved mode：非交叉模式，NALU的解码顺序和显示顺序是一致的，先解码的NALU先显示。</li>
+  <li>Interleaved mode： 交叉模式，本模式下NALU的解码顺序和显示顺序是不一致的，比如有B帧的情况下。</li>
+</ul>
+
+<p>RTP打包使用哪种模式，是由编码器决定的，不能随便填。</p>
+
+<p>RTP包类型又包含以下几种：</p>
+<ul>
+  <li>a. 单个NALU：一个数据报文包含一个完整NALU的</li>
+  <li>b. 聚合多个NALU：一个数据报文中包含多个NALU，根据这些NALU的时间戳是否相同，又分为下面两种
+    <ul>
+      <li>STAP：一个数据报文包含多个NALU，这些NALU时间戳相同，又分为STAP-A方式和STAP-B方式</li>
+      <li>MTAP：一个数据报文包含多个NALU，这些NALU时间戳不同，又分为MTAP16方式和MTAP24方式</li>
+    </ul>
+  </li>
+  <li>c. 分片方式：NALU太大，无法用一个数据包传输，需要分片，又分为FU-A和FU-B方式</li>
+</ul>
+
+<p>打包模式与包类型之间的关系如下，并不能随便使用：</p>
+
+<p><img src="http://data.coderhuo.tech/blog/avtp/rtp_type.jpg" alt="每种打包模式使用的rtp包类型" /></p>
+
+<p>我们的视频数据是Non-interleaved mode模式，所以理论上可以使用上图中的NAL unit、STAP-A和FU-A三种包类型，但通常情况下不会把多个NALU聚合在一起发送（增加复杂度），所以实际只使用了NAL unit和FU-A两种包类型，前者用来封装较小不需要分片的NALU，后者用来封装需要分片的NALU。</p>
+
+<h4 id="23-avtp封装h264_payload">2.3 AVTP封装h264_payload</h4>
+
+<p>AVTP的h264_payload是遵循RFC 6184规范（RTP Payload Format for H.264 Video）的。<br />
+前面提到，我们只使用了NAL unit和FU-A两种包类型，前者用来封装较小不需要分片的NALU（下图左半部分），后者用来封装需要分片的NALU（下图右半部分）。</p>
+
+<p><img src="http://data.coderhuo.tech/blog/avtp/avtp_pack.jpg" alt="AVTP封装" /></p>
+
+<h2 id="二媒体同步">二、媒体同步</h2>
+
+<h3 id="31-avtp-presentation-time">3.1 AVTP Presentation Time</h3>
+
+<p>AVTP Presentation Time的含义是呈现时间，表示接收方在该时刻需要将AVTP数据包payload中的音视频数据送到应用层进行处理，比如解码播放。</p>
+
+<p>假设报文经过下图发送参考平面（Ingress Time Reference Plan）的时刻是t1（基于gPTP时间），那么Presentation Time的值就是<code class="highlighter-rouge">t1 + Max Transit Time</code>。 假设该Presentation Time用gPTP表示为<code class="highlighter-rouge">AS_sec(秒) + AS_ns(纳秒)</code>， 实际打在AVTP头部的时间戳为：(AS_sec × 10<sup>9</sup> + AS_ns) mod 2<sup>32</sup>。</p>
+
+<p><em>注：这个时间戳为什么要对gPTP时间做取模处理，规范中并未说明，猜测应该是为了节省字节。因为表示完整的gPTP时间需要占用10个字节，其中6字节用来表示秒，4字节用来表示纳秒，而现在只需要4字节即可。当然，该时间戳4秒就轮回了。</em></p>
+
+<p><img src="http://data.coderhuo.tech/blog/avtp/avtp_present_time.png" alt="AVTP Presentation Time定义" /></p>
+
+<p>那么，Max Transit Time是如何定义的呢？如下图所示，如果音频源到两个扬声器的传输时间分别是t1、t2，Max Transit Time就是二者中的最大值。</p>
+
+<p><img src="http://data.coderhuo.tech/blog/avb_summary/avb_in_house.png" alt="Max Transit Time示意图" /></p>
+
+<p>Max Transit Time的通用定义如下，其中tn为Talker到第n个Listener的最大传输时间。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Max Transit Time = MAX(t1, t2, …, tn)
+</code></pre></div></div>
+
+<p>接下来以H264为例讲解AVTP的媒体同步机制，下图是H264 Over AVTP典型的处理流程：</p>
+
+<p><img src="http://data.coderhuo.tech/blog/avtp/avtp_timestamp.jpg" alt="avtp_timestamp示意图" /></p>
+
+<h3 id="32-展示时间同步播放时间同步">3.2 展示时间同步（播放时间同步）</h3>
+<p>结合<code class="highlighter-rouge">AVTP Presentation Time</code>和<code class="highlighter-rouge">Max Transit Time</code>的定义，可以看到：它可以指示接收端在未来的某一时刻处理音视频数据；数据可以提前到（提前到的要等待，直到时刻AVTP Presentation Time到来才能被处理），但绝不能迟到（你说你在时间点AVTP Presentation Time到达，结果迟到了，只有被丢弃）。<strong>就像是一次准时开始的会议，提前到的要等待会议开始，迟到者无法听到前面的内容</strong>。在这种机制保障下，考虑下面的两个场景，是不是都可以达到同步效果？</p>
+
+<p><img src="http://data.coderhuo.tech/blog/avtp/Sync_by_avtp_timestamp.jpg" alt="同步播放示意图" /></p>
+
+<h3 id="33-媒体时钟同步">3.3 媒体时钟同步</h3>
+
+<p>媒体时钟同步，解决的是按采集速度和播放速度一致的问题（相对时间同步的问题）。</p>
+
+<p>视频的媒体时钟一般都是90KHz，理想情况下，大家以同样的频率震荡，但是随着时间的流逝或者环境影响，会漂移，这样就会导致talker和Listener的媒体时钟不同步，进而表现为播放不正常（播放的太快或太慢）。</p>
+
+<p>媒体时钟恢复，是指Listener根据AVTP Presentation Time重建媒体时钟，使之和采集端保持同步，进而指导音视频<strong>以采集时的速率播放</strong>，流程如下：</p>
+
+<ol>
+  <li>
+    <p>AVTP假设网络中各个节点的媒体时钟都是自由运行的（也就是相互之间不同步）。为了便于接收端恢复媒体时钟，在发送端，Talker把媒体时钟嵌入在展示时间戳中的（采样点对应gPTP的某个时刻），如下图所示：<br />
+<img src="http://data.coderhuo.tech/blog/avtp/talker_media_clock.png" alt="talker_media_clock" /></p>
+  </li>
+  <li>
+    <p>在接收端，媒体时钟从展示时间戳中恢复（AVTP Presentation Time和本地gPTP时间对比，二者同步的时刻对应一个Media Clock的采样点），进而控制音视频的播放。
+<img src="http://data.coderhuo.tech/blog/avtp/listener_media_clock.png" alt="listener_media_clock" /></p>
+  </li>
+  <li>
+    <p>媒体时钟恢复模块示意图如下所示：<br />
+<img src="http://data.coderhuo.tech/blog/avtp/media_clock_recovery.gif" alt="媒体时钟恢复模块示意图" /></p>
+  </li>
+</ol>
+
+<p>AVTP中也可以定义专门的Media Clock Stream，用来同步相关节点的媒体时钟，这里不再展开介绍。</p>
+
+<h3 id="34-h264_timestamp">3.4 h264_timestamp</h3>
+
+<p>AVTP中有了展示时间戳，为什么还要加上h264_timestamp时间戳？</p>
+
+<p>在交叉编码模式（Interleaved mode）下，解码顺序和显示顺序是不一致的。如下图所示，视频数据是按照Frame0、Frame1的顺序依次采集的，接收端也要按这个顺序显示。</p>
+
+<p><img src="http://data.coderhuo.tech/blog/avtp/pts.jpg" alt="采集顺序" /></p>
+
+<p>但是，由于存在B帧，编码器实际的输出顺序如下，接收端也要按照下面的顺序解码：</p>
+
+<p><img src="http://data.coderhuo.tech/blog/avtp/dts.jpg" alt="编码输出顺序" /></p>
+
+<p>从上面的章节可以了解到，AVTP Presentation Time的作用是<strong>DTS（Decoding Time Stamp）</strong>，在非交叉模式（Non-interleaved mode）下，是可以正常工作的；但是在交叉模式（Interleaved mode）下，由于解码顺序和显示顺序不一致，虽然能按正确的顺序解码，但是不能按正确的顺序显示。</p>
+
+<p>为了解决这个问题，才加上了h264_timestamp，它也是遵循RFC 6184规范的（其实就是RTP头部的时间戳）。它充当的是<strong>PTS（Presentation Time Stamp）</strong>的角色，用以指示正确的显示顺序。</p>
+
+<p>在非交叉模式下，该值可填充也可不填充。</p>
+
+<h2 id="三参考资料">三、参考资料</h2>
+
+<ol>
+  <li><a href="https://blog.csdn.net/u010178611/article/details/82592393">H264 over RTP 的打包</a></li>
+  <li><a href="https://www.embedded.com/understanding-ieees-deterministic-av-bridging-standards/">Understanding IEEE’s deterministic AV bridging standards</a></li>
+</ol>
+:ET

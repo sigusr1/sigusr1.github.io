@@ -1,0 +1,26 @@
+I"m
+<p>代码编译的时候，编译服务器莫名其妙的报以下错误:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fatal error: error writing to /tmp/ccGjoKTF.s:No space left on device
+</code></pre></div></div>
+
+<p>奇怪了，编译脚本中并没有往tmp目录写文件呀！</p>
+
+<p>仔细看了下错误信息，这个ccGjoKTF.s应该是编译过程的中间文件，其中文件名是随机值。然而makefile中并未要求保留汇编代码。</p>
+
+<p>写了个demo，用strace（strace gcc test）跟踪了下，发现gcc不仅把汇编代码（<em>.s</em>）写到了tmp目录，也把二进制文件（<em>.o</em>)写到了tmp目录，并且编译完成自动删除临时文件。</p>
+
+<p>如果在编译的时候使用-S或者-C选项，则会把对应的中间文件保存在当前目录，而不是tmp目录。</p>
+
+<p>如果在编译的时候使用-save-temps选项，也会把中间产物保存在当前目录，并且编译完成不删除临时文件。</p>
+
+<p><a href="https://stackoverflow.com/questions/4874735/tmp-folder-and-gcc">查资料</a>发现原来gcc默认把编译过程中的中间文件写到tmp目录。
+如果不想让gcc把中间文件写到tmp目录，可以设置环境变量TMPDIR。比如可以在makefile中设置到当前目录:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export TMPDIR=$(pwd)
+</code></pre></div></div>
+
+<p>至于tmp目录空间不足，ls -l 一看，竟然是有些项目的makefile写的有问题，编译完成后残留了很多文件。</p>
+
+<p><strong>参考文档：</strong><br />
+<a href="https://stackoverflow.com/questions/4874735/tmp-folder-and-gcc">https://stackoverflow.com/questions/4874735/tmp-folder-and-gcc</a><br />
+<a href="https://gcc.gnu.org/onlinedocs/gcc-5.4.0/gcc.pdf">https://gcc.gnu.org/onlinedocs/gcc-5.4.0/gcc.pdf</a></p>
+:ET

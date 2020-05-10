@@ -1,0 +1,98 @@
+I"�<ul id="markdown-toc">
+  <li><a href="#1-准备一个可以访问google的服务器" id="markdown-toc-1-准备一个可以访问google的服务器">1. 准备一个可以访问google的服务器</a></li>
+  <li><a href="#2-下载源码" id="markdown-toc-2-下载源码">2. 下载源码</a></li>
+  <li><a href="#3-编译安装" id="markdown-toc-3-编译安装">3. 编译安装</a></li>
+  <li><a href="#4-修改nginx配置文件" id="markdown-toc-4-修改nginx配置文件">4. 修改nginx配置文件</a></li>
+  <li><a href="#5-启动nginx" id="markdown-toc-5-启动nginx">5. 启动nginx</a></li>
+  <li><a href="#6-用域名来访问" id="markdown-toc-6-用域名来访问">6. 用域名来访问</a></li>
+  <li><a href="#7-域名备案" id="markdown-toc-7-域名备案">7. 域名备案？？？</a></li>
+  <li><a href="#8-参考文档" id="markdown-toc-8-参考文档">8. 参考文档</a></li>
+</ul>
+<p>本文简要介绍基于Nginx反向代理，建立Google镜像的步骤。</p>
+
+<h2 id="1-准备一个可以访问google的服务器">1. 准备一个可以访问google的服务器</h2>
+
+<p>可以考虑申请一个访问google不受限的云服务器，比如亚马逊。</p>
+
+<h2 id="2-下载源码">2. 下载源码</h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget https://codeload.github.com/openssl/openssl/zip/OpenSSL_1_1_0e -O OpenSSL_1_1_0e.zip
+
+wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.39.tar.gz
+wget http://zlib.net/zlib-1.2.11.tar.gz
+
+git clone https://github.com/nginx/nginx.git
+git clone https://github.com/cuber/ngx_http_google_filter_module
+git clone https://github.com/yaoweibin/ngx_http_substitutions_filter_module
+</code></pre></div></div>
+
+<p>pcre版本不要太新，否则后面编译会有问题。</p>
+<h2 id="3-编译安装">3. 编译安装</h2>
+
+<p>进入nginx目录，执行<code class="highlighter-rouge">git checkout release-1.13.9</code>选定版本<br />
+进入ngx_http_google_filter_module目录，执行<code class="highlighter-rouge">git checkout 0.2.0</code>选定版本<br />
+进入ngx_http_substitutions_filter_module目录，执行<code class="highlighter-rouge">git checkout v0.6.4</code>选定版本</p>
+
+<p>解压其他压缩包后，在nginx根目录下编译安装：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ./auto/configure --with-pcre=../pcre-8.39 --with-openssl=../openssl-OpenSSL_1_1_0e --with-zlib=../zlib-1.2.11 --with-http_ssl_module --add-module=../ngx_http_google_filter_module --add-module=../ngx_http_substitutions_filter_module
+
+make -j 4
+
+sudo make install
+</code></pre></div></div>
+
+<p>nginx默认安装目录是/usr/local/， 
+可执行文件/usr/local/nginx/sbin/nginx，
+配置文件/usr/local/nginx/conf/nginx.conf</p>
+
+<h2 id="4-修改nginx配置文件">4. 修改nginx配置文件</h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+    server_name localhost;
+    listen 80;
+    resolver 8.8.8.8;
+    location / {
+        google on;
+    }
+}
+</code></pre></div></div>
+<h2 id="5-启动nginx">5. 启动nginx</h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo /usr/local/nginx/sbin/nginx
+</code></pre></div></div>
+
+<p>然后，就可以在浏览器上通过云主机的公网IP地址访问google了。</p>
+<h2 id="6-用域名来访问">6. 用域名来访问</h2>
+
+<p>目前，我们能通过IP来访问，但是云服务器的IP地址不是固定的，所以, 可以考虑用域名来访问。</p>
+
+<p>域名是之前申请的花生壳的一个免费域名。为了在IP地址变化时动态更新域名对应的IP地址，需要在服务器上定时检测IP地址的变化，并在变化的时候更新域名信息。</p>
+
+<p>这里吐槽下花生壳在Linux下的官方客户端，试了几个版本，折腾了半天，最终还是无法使用。
+我们通过下面的脚本来执行IP变化检测，并且在变化的时候更新域名信息。
+并加入crontab 任务定时执行。</p>
+
+<p><a href="https://github.com/sigusr1/ph-ddns.git">https://github.com/sigusr1/ph-ddns.git</a></p>
+
+<h2 id="7-域名备案">7. 域名备案？？？</h2>
+<p>到这里，ping 域名也能正常ping通，域名对应的IP地址也正确，按理说至此域名已能正常工作。
+遗憾的是，通过IP可以正常访问，通过域名就不可以。
+在服务端和客户端抓包可以看到，被和谐了，有个“中间人”同时对Server和Client都发送了RST报文。</p>
+
+<p>网络拓扑如下：
+<img src="http://data.coderhuo.tech/blog/nginx%B4%FA%C0%ED%CD%F8%C2%E7%CD%D8%C6%CB%CD%BC.jpg" alt="nginx代理网络拓扑图.jpg" /></p>
+
+<p>报文如下：
+<img src="http://data.coderhuo.tech/blog/nginx%B4%FA%C0%ED%D6%D0%BC%E4%C8%CB%B6%CF%BF%AA%C1%AC%BD%D3.jpg" alt="nginx代理中间人断开连接.jpg" /></p>
+
+<p>后来了解到，可能是因为域名未备案的原因，被墙了。
+但是他们怎么实现的呢，通过IP可以访问，通过域名无法访问，猜测是通过HTTP头部的HOST字段来检测的。</p>
+
+<h2 id="8-参考文档">8. 参考文档</h2>
+<p><a href="https://www.meanevo.com/2015/08/20/mirrors-google-on-nginx/">https://www.meanevo.com/2015/08/20/mirrors-google-on-nginx/</a></p>
+
+<p><a href="http://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/crontab.html">http://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/crontab.html</a></p>
+
+<p><a href="https://github.com/sigusr1/ph-ddns.git">https://github.com/sigusr1/ph-ddns.git</a></p>
+:ET

@@ -1,0 +1,23 @@
+I"o
+<p>本文主要介绍如何在source insight上集成svn命令。</p>
+
+<p><strong>1. SVN Log</strong></p>
+
+<p>option-&gt;Custom Commands <br />
+添加一个命令<br />
+名字：SVN Log  （随便自己写）<br />
+运行：”C:\Program Files\TortoiseSVN\bin\TortoiseProc.exe” /command:log /path:%f /notempfile /closeonend  <br />
+其中TortoiseProc.exe的目录以自己电脑上的为准。</p>
+
+<p><strong>2. SVN Diff</strong></p>
+
+<p>option-&gt;Custom Commands<br />
+添加一个命令<br />
+名字：SVN Diff  （随便自己写）<br />
+运行：”C:\Program Files\TortoiseSVN\bin\TortoiseProc.exe” /command:diff /path:%f /notempfile /closeonend</p>
+
+<p><strong>同样，添加命令 ShellExecute open %d 可以打开当前文件所在文件夹。</strong></p>
+
+<p>接下来可以在source insight上添加相关命令的自定义快捷键和自定义菜单。</p>
+
+:ET

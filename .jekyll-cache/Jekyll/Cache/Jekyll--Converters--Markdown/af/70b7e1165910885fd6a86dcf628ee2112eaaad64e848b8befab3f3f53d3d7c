@@ -1,0 +1,732 @@
+I"c�<ul id="markdown-toc">
+  <li><a href="#一预备知识" id="markdown-toc-一预备知识">一、预备知识</a></li>
+  <li><a href="#二实验环境" id="markdown-toc-二实验环境">二、实验环境</a></li>
+  <li><a href="#三栈" id="markdown-toc-三栈">三、栈</a></li>
+  <li><a href="#四堆" id="markdown-toc-四堆">四、堆</a></li>
+  <li><a href="#五可执行程序的位置" id="markdown-toc-五可执行程序的位置">五、可执行程序的位置</a></li>
+  <li><a href="#六命令行参数和环境变量" id="markdown-toc-六命令行参数和环境变量">六、命令行参数和环境变量</a>    <ul>
+      <li><a href="#数组变量argv和env是相邻的吗" id="markdown-toc-数组变量argv和env是相邻的吗">数组变量argv和env是相邻的吗？</a></li>
+      <li><a href="#第一个命令行参数紧挨着数组变量env吗" id="markdown-toc-第一个命令行参数紧挨着数组变量env吗">第一个命令行参数紧挨着数组变量env吗？</a></li>
+    </ul>
+  </li>
+  <li><a href="#七栈真的是向下生长吗" id="markdown-toc-七栈真的是向下生长吗">七、栈真的是向下生长吗？</a></li>
+  <li><a href="#八proc" id="markdown-toc-八proc">八、/proc</a></li>
+  <li><a href="#九下节预告" id="markdown-toc-九下节预告">九、下节预告</a></li>
+  <li><a href="#十继续阅读" id="markdown-toc-十继续阅读">十、继续阅读</a></li>
+  <li><a href="#十一原文链接" id="markdown-toc-十一原文链接">十一、原文链接</a></li>
+</ul>
+<p>这是虚拟内存系列文章的第三篇。<br />
+前面我们提到在进程的虚拟内存中可以找到哪些东西，以及在哪里去找。<br />
+本文我们将通过打印程序中不同元素内存地址的方式，一步一步细化下面的虚拟内存图：</p>
+
+<p><img src="http://data.coderhuo.tech/blog/virtual_memory/virtual_memory.jpg" alt="虚拟内存示意图" /></p>
+
+<h2 id="一预备知识">一、预备知识</h2>
+
+<p>为了方便理解本文，你需要具备以下知识：</p>
+
+<ul>
+  <li>C语言基础</li>
+  <li>一些汇编知识（非必需）</li>
+  <li>了解Linux的文件系统和shell命令</li>
+  <li>了解文件<code class="highlighter-rouge">/proc/[pid]/maps</code>（可参阅<code class="highlighter-rouge">man proc</code>或<a href="http://blog.coderhuo.tech/2017/10/12/Virtual_Memory_C_strings_proc/">《虚拟内存探究 – 第一篇:C strings &amp; /proc》</a>中的相关介绍）</li>
+</ul>
+
+<h2 id="二实验环境">二、实验环境</h2>
+<p>所有的脚本和程序都在下面的环境中测试过：</p>
+
+<ul>
+  <li>Ubuntu
+    <ul>
+      <li>Linux ubuntu 4.4.0-31-generic #50~14.04.1-Ubuntu SMP Wed Jul 13 01:07:32 UTC 2016 x86_64 x86_64 x86_64 GNU/Linux</li>
+      <li><strong>下面提到的都是基于本系统的，其他系统可能会有差异</strong></li>
+    </ul>
+  </li>
+  <li>gcc
+    <ul>
+      <li>gcc (Ubuntu 4.8.4-2ubuntu1~14.04.3) 4.8.4</li>
+    </ul>
+  </li>
+  <li>objdump
+    <ul>
+      <li>GNU objdump (GNU Binutils for Ubuntu) 2.24</li>
+    </ul>
+  </li>
+  <li>udcli
+    <ul>
+      <li>udis86 1.7.2</li>
+    </ul>
+  </li>
+  <li>bc
+    <ul>
+      <li>bc 1.06.95</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="三栈">三、栈</h2>
+
+<p>首先我们想确认的是栈在虚拟内存中的位置。<br />
+我们知道，C语言中的局部变量位于栈上。如果我们打印一个局部变量的内存地址，就可以根据这个地址寻找栈在虚拟内存中的位置。我们使用下面的程序（<code class="highlighter-rouge">main-1.c</code>）寻找栈的位置：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+/**
+ * main - print locations of various elements
+ *
+ * Return: EXIT_FAILURE if something failed. Otherwise EXIT_SUCCESS
+ */
+int main(void)
+{
+    int a;
+
+    printf("Address of a: %p\n", (void *)&amp;a);
+    return (EXIT_SUCCESS);
+}
+</code></pre></div></div>
+<p>编译运行:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>julien@holberton:~/holberton/w/hackthevm2$ gcc -Wall -Wextra -pedantic -Werror main-0.c -o 0
+julien@holberton:~/holberton/w/hackthevm2$ ./0
+Address of a: 0x7ffd14b8bd9c
+julien@holberton:~/holberton/w/hackthevm2$ 
+</code></pre></div></div>
+<p>这是我们和其他元素的地址相比的第一个参照地址。</p>
+
+<h2 id="四堆">四、堆</h2>
+
+<p>我们使用<code class="highlighter-rouge">malloc</code>为变量分配的内存位于堆上。<br />
+可以在程序中添加一个使用<code class="highlighter-rouge">malloc</code>的语句，借此查看<code class="highlighter-rouge">malloc</code>返回的地址位于哪里。如下所示(<code class="highlighter-rouge">main-1.c</code>)：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+/**
+ * main - print locations of various elements
+ *
+ * Return: EXIT_FAILURE if something failed. Otherwise EXIT_SUCCESS
+ */
+int main(void)
+{
+    int a;
+    void *p;
+
+    printf("Address of a: %p\n", (void *)&amp;a);
+    p = malloc(98);
+    if (p == NULL)
+    {
+        fprintf(stderr, "Can't malloc\n");
+        return (EXIT_FAILURE);
+    }
+    printf("Allocated space in the heap: %p\n", p);
+    return (EXIT_SUCCESS);
+}
+</code></pre></div></div>
+<p>编译运行:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>julien@holberton:~/holberton/w/hackthevm2$ gcc -Wall -Wextra -pedantic -Werror main-1.c -o 1
+julien@holberton:~/holberton/w/hackthevm2$ ./1 
+Address of a: 0x7ffd4204c554
+Allocated space in the heap: 0x901010
+julien@holberton:~/holberton/w/hackthevm2$ 
+</code></pre></div></div>
+
+<p>至此可以确定堆(<code class="highlighter-rouge">0x901010</code>)在栈(<code class="highlighter-rouge">0x7ffd4204c554</code>)的下面。据此可以画出如下的内存图:</p>
+
+<p><img src="http://data.coderhuo.tech/blog/virtual_memory/virtual_memory_stack_heap.png" alt="内存布局示意图" /></p>
+
+<h2 id="五可执行程序的位置">五、可执行程序的位置</h2>
+<p>可执行程序也会被加载到虚拟内存中。如果我们打印<code class="highlighter-rouge">main</code>函数的地址，就可以知道可执行程序在虚拟内存中相对于堆栈的位置。<br />
+我们看看它是否真的在堆的下面(<code class="highlighter-rouge">main-2.c</code>)：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+/**
+ * main - print locations of various elements
+ *
+ * Return: EXIT_FAILURE if something failed. Otherwise EXIT_SUCCESS
+ */
+int main(void)
+{
+    int a;
+    void *p;
+
+    printf("Address of a: %p\n", (void *)&amp;a);
+    p = malloc(98);
+    if (p == NULL)
+    {
+        fprintf(stderr, "Can't malloc\n");
+        return (EXIT_FAILURE);
+    }
+    printf("Allocated space in the heap: %p\n", p);
+    printf("Address of function main: %p\n", (void *)main);
+    return (EXIT_SUCCESS);
+}
+</code></pre></div></div>
+<p>编译并运行:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>julien@holberton:~/holberton/w/hackthevm2$ gcc -Wall -Wextra -Werror main-2.c -o 2
+julien@holberton:~/holberton/w/hackthevm2$ ./2 
+Address of a: 0x7ffdced37d74
+Allocated space in the heap: 0x2199010
+Address of function main: 0x40060d
+julien@holberton:~/holberton/w/hackthevm2$ 
+</code></pre></div></div>
+
+<p>不出所料，可执行程序(<code class="highlighter-rouge">0x40060d</code>)果然位于堆的下面（<code class="highlighter-rouge">0x2199010</code>)。但我们必须确认这是我们的程序所在地址，而不是指向其他地址的指针的地址。我们借助工具<a href="https://en.wikipedia.org/wiki/Objdump">objdump</a>来查看函数<code class="highlighter-rouge">main</code>的内存地址：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>julien@holberton:~/holberton/w/hackthevm2$ objdump -M intel -j .text -d 2 | grep '&lt;main&gt;:' -A 5
+000000000040060d &lt;main&gt;:
+  40060d:   55                      push   rbp
+  40060e:   48 89 e5                mov    rbp,rsp
+  400611:   48 83 ec 10             sub    rsp,0x10
+  400615:   48 8d 45 f4             lea    rax,[rbp-0xc]
+  400619:   48 89 c6                mov    rsi,rax
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">000000000040060d &lt;main&gt;</code> –&gt;该地址和我们打印出来的<code class="highlighter-rouge">0x40060d</code>一致。如果你还持有怀疑，可以打印出该地址开始的几个字节，看看和<code class="highlighter-rouge">objdump</code>输出的是否一致(<code class="highlighter-rouge">main-3.c</code>)：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+/**
+ * main - print locations of various elements
+ *
+ * Return: EXIT_FAILURE if something failed. Otherwise EXIT_SUCCESS
+ */
+int main(void)
+{
+    int a;
+    void *p;
+    unsigned int i;
+
+    printf("Address of a: %p\n", (void *)&amp;a);
+    p = malloc(98);
+    if (p == NULL)
+    {
+        fprintf(stderr, "Can't malloc\n");
+        return (EXIT_FAILURE);
+    }
+    printf("Allocated space in the heap: %p\n", p);
+    printf("Address of function main: %p\n", (void *)main);
+    printf("First bytes of the main function:\n\t");
+    for (i = 0; i &lt; 15; i++)
+    {
+        printf("%02x ", ((unsigned char *)main)[i]);
+    }
+    printf("\n");
+    return (EXIT_SUCCESS);
+}
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>julien@holberton:~/holberton/w/hackthevm2$ gcc -Wall -Wextra -Werror main-3.c -o 3
+julien@holberton:~/holberton/w/hackthevm2$ objdump -M intel -j .text -d 3 | grep '&lt;main&gt;:' -A 5
+000000000040064d &lt;main&gt;:
+  40064d:   55                      push   rbp
+  40064e:   48 89 e5                mov    rbp,rsp
+  400651:   48 83 ec 10             sub    rsp,0x10
+  400655:   48 8d 45 f0             lea    rax,[rbp-0x10]
+  400659:   48 89 c6                mov    rsi,rax
+julien@holberton:~/holberton/w/hackthevm2$ ./3 
+Address of a: 0x7ffeff0f13b0
+Allocated space in the heap: 0x8b3010
+Address of function main: 0x40064d
+First bytes of the main function:
+    55 48 89 e5 48 83 ec 10 48 8d 45 f0 48 89 c6 
+julien@holberton:~/holberton/w/hackthevm2$ echo "55 48 89 e5 48 83 ec 10 48 8d 45 f0 48 89 c6" | udcli -64 -x -o 40064d
+000000000040064d 55               push rbp                
+000000000040064e 4889e5           mov rbp, rsp            
+0000000000400651 4883ec10         sub rsp, 0x10           
+0000000000400655 488d45f0         lea rax, [rbp-0x10]     
+0000000000400659 4889c6           mov rsi, rax            
+julien@holberton:~/holberton/w/hackthevm2$
+</code></pre></div></div>
+<p><em>提示:可以在这里下载反汇编工具<a href="http://udis86.sourceforge.net/">Udis86 Disassembler Library</a></em></p>
+
+<p>由此可见，我们打印出来的地址和内容都是一致的。因此可以确认这个地址就是我们的<code class="highlighter-rouge">main</code>函数。</p>
+
+<p>更新后内存布局示意图如下:<br />
+<img src="http://data.coderhuo.tech/blog/virtual_memory/virtual_memory_stack_heap_executable.png" alt="" /></p>
+
+<h2 id="六命令行参数和环境变量">六、命令行参数和环境变量</h2>
+
+<p><code class="highlighter-rouge">main</code>函数可接收以下参数:</p>
+
+<ul>
+  <li>命令行参数
+    <ul>
+      <li><code class="highlighter-rouge">main</code>函数的第一个参数(通常写作<code class="highlighter-rouge">argc</code>或<code class="highlighter-rouge">ac</code>)代表命令行参数的个数</li>
+      <li><code class="highlighter-rouge">main</code>函数的第二个参数(通常写作<code class="highlighter-rouge">argv</code>或<code class="highlighter-rouge">av</code>)是一个字符串指针数组，数组的每个成员都指向一个命令行参数（C字符串）</li>
+    </ul>
+  </li>
+  <li>环境变量参数
+    <ul>
+      <li><code class="highlighter-rouge">main</code>函数的第三个参数(通常写作<code class="highlighter-rouge">env</code>或<code class="highlighter-rouge">envp</code>)也是一个字符串指针数组，数组的每个成员都指向一个环境变量（C字符串）</li>
+    </ul>
+  </li>
+</ul>
+
+<p>我们看下这些元素位于虚拟内存的哪部分（<code class="highlighter-rouge">main-4.c</code>）:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+/**
+ * main - print locations of various elements
+ *
+ * Return: EXIT_FAILURE if something failed. Otherwise EXIT_SUCCESS
+ */
+int main(int ac, char **av, char **env)
+{
+        int a;
+        void *p;
+        int i;
+
+        printf("Address of a: %p\n", (void *)&amp;a);
+        p = malloc(98);
+        if (p == NULL)
+        {
+                fprintf(stderr, "Can't malloc\n");
+                return (EXIT_FAILURE);
+        }
+        printf("Allocated space in the heap: %p\n", p);
+        printf("Address of function main: %p\n", (void *)main);
+        printf("First bytes of the main function:\n\t");
+        for (i = 0; i &lt; 15; i++)
+        {
+                printf("%02x ", ((unsigned char *)main)[i]);
+        }
+        printf("\n");
+        printf("Address of the array of arguments: %p\n", (void *)av);
+        printf("Addresses of the arguments:\n\t");
+        for (i = 0; i &lt; ac; i++)
+        {
+                printf("[%s]:%p ", av[i], av[i]);
+        }
+        printf("\n");
+        printf("Address of the array of environment variables: %p\n", (void *)env);
+    printf("Address of the first environment variable: %p\n", (void *)(env[0]));
+        return (EXIT_SUCCESS);
+}
+</code></pre></div></div>
+
+<p>编译并运行:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>julien@holberton:~/holberton/w/hackthevm2$ gcc -Wall -Wextra -Werror main-4.c -o 4
+julien@holberton:~/holberton/w/hackthevm2$ ./4 Hello Holberton School!
+Address of a: 0x7ffe7d6d8da0
+Allocated space in the heap: 0xc8c010
+Address of function main: 0x40069d
+First bytes of the main function:
+    55 48 89 e5 48 83 ec 30 89 7d ec 48 89 75 e0 
+Address of the array of arguments: 0x7ffe7d6d8e98
+Addresses of the arguments:
+    [./4]:0x7ffe7d6da373 [Hello]:0x7ffe7d6da377 [Holberton]:0x7ffe7d6da37d [School!]:0x7ffe7d6da387 
+Address of the array of environment variables: 0x7ffe7d6d8ec0
+
+/* 译者注：根据上面的程序，应该不会有下面的输出的，但作者接下来的讨论用到了这部分，所以保留这部分 */
+Address of the first environment variables:
+    [0x7ffe7d6da38f]:"XDG_VTNR=7"
+    [0x7ffe7d6da39a]:"XDG_SESSION_ID=c2"
+    [0x7ffe7d6da3ac]:"CLUTTER_IM_MODULE=xim"
+julien@holberton:~/holberton/w/hackthevm2$ 
+</code></pre></div></div>
+
+<p>在这之前我们知道命令行参数和环境变量都位于栈上面，但是不知道二者的相对位置。现在可以确定二者的相对位置：</p>
+
+<p><code class="highlighter-rouge">stack</code> (<code class="highlighter-rouge">0x7ffe7d6d8da0</code>) &lt; <code class="highlighter-rouge">argv</code> (<code class="highlighter-rouge">0x7ffe7d6d8e98</code>) &lt; <code class="highlighter-rouge">env</code> (<code class="highlighter-rouge">0x7ffe7d6d8ec0</code>) &lt; <code class="highlighter-rouge">arguments</code> (从 <code class="highlighter-rouge">0x7ffe7d6da373</code> 到 <code class="highlighter-rouge">0x7ffe7d6da387</code> + <code class="highlighter-rouge">8</code> (<code class="highlighter-rouge">8</code> = 字符串<code class="highlighter-rouge">school</code>大小 + <code class="highlighter-rouge">1</code> 字节的字符串结束符<code class="highlighter-rouge">\0</code>)) &lt; <code class="highlighter-rouge">environment variables</code> (起始地址是<code class="highlighter-rouge">0x7ffe7d6da38f</code>)。</p>
+
+<p>事实上，我们可以看出所有的命令行参数在内存中都是相邻的，并且和环境变量也是相邻的（从<code class="highlighter-rouge">0x7ffe7d6da387</code> + <code class="highlighter-rouge">8</code> = <code class="highlighter-rouge">0x7ffe7d6da38f</code>可以看出）。</p>
+
+<h3 id="数组变量argv和env是相邻的吗">数组变量argv和env是相邻的吗？</h3>
+
+<p>数组变量<code class="highlighter-rouge">argv</code>有5个元素（4个是从命令行输入的，另一个是空元素<code class="highlighter-rouge">NULL</code> – <code class="highlighter-rouge">argv</code>总是以NULL结束，以此标记数组的结尾）。<code class="highlighter-rouge">argv</code>的每个元素都是指向<code class="highlighter-rouge">char</code>类型的指针，由于我们是64位系统，所以一个指针是8个字节（可通过C语言中的操作符<code class="highlighter-rouge">sizeof()</code>获取指针大小）。因此数组<code class="highlighter-rouge">argv</code>占用 <code class="highlighter-rouge">5 * 8 = 40</code>字节，也就是十六进制的<code class="highlighter-rouge">0x28</code>。将<code class="highlighter-rouge">0x28</code>加到<code class="highlighter-rouge">argv</code>的起始地址<code class="highlighter-rouge">0x7ffe7d6d8e98</code>, 得到<code class="highlighter-rouge">0x7ffe7d6d8ec0</code>(<strong>也就是<code class="highlighter-rouge">env</code>的地址</strong>)！</p>
+
+<p><strong>因此，数组变量argv和env在内存中是相邻的！</strong></p>
+
+<h3 id="第一个命令行参数紧挨着数组变量env吗">第一个命令行参数紧挨着数组变量env吗？</h3>
+
+<p>为了回答这个问题，我们需要确认数组<code class="highlighter-rouge">env</code>的大小。数组<code class="highlighter-rouge">env</code>也是以<code class="highlighter-rouge">NULL</code>指针结束，基于此，我们可以遍历数组<code class="highlighter-rouge">env</code>以确定数组大小，代码如下所示（<code class="highlighter-rouge">main-5.c</code>）：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+/**                                                                                                      
+ * main - print locations of various elements                                                            
+ *                                                                                                       
+ * Return: EXIT_FAILURE if something failed. Otherwise EXIT_SUCCESS                                      
+ */
+int main(int ac, char **av, char **env)
+{
+     int a;
+     void *p;
+     int i;
+     int size;
+
+     printf("Address of a: %p\n", (void *)&amp;a);
+     p = malloc(98);
+     if (p == NULL)
+     {
+          fprintf(stderr, "Can't malloc\n");
+          return (EXIT_FAILURE);
+     }
+     printf("Allocated space in the heap: %p\n", p);
+     printf("Address of function main: %p\n", (void *)main);
+     printf("First bytes of the main function:\n\t");
+     for (i = 0; i &lt; 15; i++)
+     {
+          printf("%02x ", ((unsigned char *)main)[i]);
+     }
+     printf("\n");
+     printf("Address of the array of arguments: %p\n", (void *)av);
+     printf("Addresses of the arguments:\n\t");
+     for (i = 0; i &lt; ac; i++)
+     {
+          printf("[%s]:%p ", av[i], av[i]);
+     }
+     printf("\n");
+     printf("Address of the array of environment variables: %p\n", (void *)env);
+     printf("Address of the first environment variables:\n");
+     for (i = 0; i &lt; 3; i++)
+     {
+          printf("\t[%p]:\"%s\"\n", env[i], env[i]);
+     }
+     /* size of the env array */
+     i = 0;
+     while (env[i] != NULL)
+     {
+          i++;
+     }
+     i++; /* the NULL pointer */
+     size = i * sizeof(char *);
+     printf("Size of the array env: %d elements -&gt; %d bytes (0x%x)\n", i, size, size);
+     return (EXIT_SUCCESS);
+}
+</code></pre></div></div>
+<p>编译运行：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>julien@holberton:~/holberton/w/hackthevm2$ ./5 Hello Betty Holberton!
+Address of a: 0x7ffc77598acc
+Allocated space in the heap: 0x2216010
+Address of function main: 0x40069d
+First bytes of the main function:
+    55 48 89 e5 48 83 ec 40 89 7d dc 48 89 75 d0 
+Address of the array of arguments: 0x7ffc77598bc8
+Addresses of the arguments:
+    [./5]:0x7ffc7759a374 [Hello]:0x7ffc7759a378 [Betty]:0x7ffc7759a37e [Holberton!]:0x7ffc7759a384 
+Address of the array of environment variables: 0x7ffc77598bf0
+Address of the first environment variables:
+    [0x7ffc7759a38f]:"XDG_VTNR=7"
+    [0x7ffc7759a39a]:"XDG_SESSION_ID=c2"
+    [0x7ffc7759a3ac]:"CLUTTER_IM_MODULE=xim"
+Size of the array env: 62 elements -&gt; 496 bytes (0x1f0)
+
+
+julien@holberton:~/holberton/w/hackthevm2$ bc
+bc 1.06.95
+Copyright 1991-1994, 1997, 1998, 2000, 2004, 2006 Free Software Foundation, Inc.
+This is free software with ABSOLUTELY NO WARRANTY.
+For details type `warranty'. 
+obase=16
+ibase=16
+1F0+7FFC77598BF0
+7FFC77598DE0
+quit
+julien@holberton:~/holberton/w/hackthevm2$ 
+</code></pre></div></div>
+<p><code class="highlighter-rouge">0x1F0 + 0x7FFC77598BF0 = 0x7FFC77598DE0</code>, 该值仍然小于第一个命令行参数的存储地址<code class="highlighter-rouge">0x7ffc7759a374</code>。<strong>所以答案是否定的！</strong></p>
+
+<p>至此，我们可以画出如下所示的内存布局图(注意哪些是相邻的，哪些是不相邻的)：</p>
+
+<p><em>译者注：下图中的<code class="highlighter-rouge">argv array</code>指的是变量<code class="highlighter-rouge">argv</code>的地址，’env array’指的是变量<code class="highlighter-rouge">env</code>的地址。</em></p>
+
+<p><img src="http://data.coderhuo.tech/blog/virtual_memory/virtual_memory_args_env.png" alt="" /></p>
+
+<h2 id="七栈真的是向下生长吗">七、栈真的是向下生长吗？</h2>
+<p>可以通过函数调用来确认这个问题。<strong>如果栈真的向下生长，调用函数中的变量地址应该大于被调用函数中的变量地址</strong>（<code class="highlighter-rouge">main-6.c</code>）：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+/**                                                                                                      
+ * f - print locations of various elements                                                               
+ *                                                                                                       
+ * Returns: nothing                                                                                      
+ */
+void f(void)
+{
+     int a;
+     int b;
+     int c;
+
+     a = 98;
+     b = 1024;
+     c = a * b;
+     printf("[f] a = %d, b = %d, c = a * b = %d\n", a, b, c);
+     printf("[f] Adresses of a: %p, b = %p, c = %p\n", (void *)&amp;a, (void *)&amp;b, (void *)&amp;c);
+}
+
+/**                                                                                                      
+ * main - print locations of various elements                                                            
+ *                                                                                                       
+ * Return: EXIT_FAILURE if something failed. Otherwise EXIT_SUCCESS                                      
+ */
+int main(int ac, char **av, char **env)
+{
+     int a;
+     void *p;
+     int i;
+     int size;
+
+     printf("Address of a: %p\n", (void *)&amp;a);
+     p = malloc(98);
+     if (p == NULL)
+     {
+          fprintf(stderr, "Can't malloc\n");
+          return (EXIT_FAILURE);
+     }
+     printf("Allocated space in the heap: %p\n", p);
+     printf("Address of function main: %p\n", (void *)main);
+     printf("First bytes of the main function:\n\t");
+     for (i = 0; i &lt; 15; i++)
+     {
+          printf("%02x ", ((unsigned char *)main)[i]);
+     }
+     printf("\n");
+     printf("Address of the array of arguments: %p\n", (void *)av);
+     printf("Addresses of the arguments:\n\t");
+     for (i = 0; i &lt; ac; i++)
+     {
+          printf("[%s]:%p ", av[i], av[i]);
+     }
+     printf("\n");
+     printf("Address of the array of environment variables: %p\n", (void *)env);
+     printf("Address of the first environment variables:\n");
+     for (i = 0; i &lt; 3; i++)
+     {
+          printf("\t[%p]:\"%s\"\n", env[i], env[i]);
+     }
+     /* size of the env array */
+     i = 0;
+     while (env[i] != NULL)
+     {
+          i++;
+     }
+     i++; /* the NULL pointer */
+     size = i * sizeof(char *);
+     printf("Size of the array env: %d elements -&gt; %d bytes (0x%x)\n", i, size, size);
+     f();
+     return (EXIT_SUCCESS);
+}
+</code></pre></div></div>
+<p>编译运行:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>julien@holberton:~/holberton/w/hackthevm2$ gcc -Wall -Wextra -Werror main-6.c -o 6
+julien@holberton:~/holberton/w/hackthevm2$ ./6
+Address of a: 0x7ffdae53ea4c
+Allocated space in the heap: 0xf32010
+Address of function main: 0x4006f9
+First bytes of the main function:
+    55 48 89 e5 48 83 ec 40 89 7d dc 48 89 75 d0 
+Address of the array of arguments: 0x7ffdae53eb48
+Addresses of the arguments:
+    [./6]:0x7ffdae54038b 
+Address of the array of environment variables: 0x7ffdae53eb58
+Address of the first environment variables:
+    [0x7ffdae54038f]:"XDG_VTNR=7"
+    [0x7ffdae54039a]:"XDG_SESSION_ID=c2"
+    [0x7ffdae5403ac]:"CLUTTER_IM_MODULE=xim"
+Size of the array env: 62 elements -&gt; 496 bytes (0x1f0)
+[f] a = 98, b = 1024, c = a * b = 100352
+[f] Adresses of a: 0x7ffdae53ea04, b = 0x7ffdae53ea08, c = 0x7ffdae53ea0c
+julien@holberton:~/holberton/w/hackthevm2$ 
+</code></pre></div></div>
+<p><code class="highlighter-rouge">main</code>函数中变量<code class="highlighter-rouge">a</code>的地址<code class="highlighter-rouge">0x7ffdae53ea4c</code>大于被调用函数<code class="highlighter-rouge">f</code>中变量<code class="highlighter-rouge">a</code>的地址<code class="highlighter-rouge">0x7ffdae53ea04 </code>。所以，<strong>栈确实是向下生长的！</strong></p>
+
+<p>至此，我们可以画出如下所示的内存布局图(注意栈的生长方向)：</p>
+
+<p><img src="http://data.coderhuo.tech/blog/virtual_memory/virtual_memory_stack.png" alt="" /></p>
+
+<h2 id="八proc">八、/proc</h2>
+
+<p>我们通过<code class="highlighter-rouge">/proc/[pid]/maps</code>（可参阅<code class="highlighter-rouge">man proc</code>或<a href="http://blog.coderhuo.tech/2017/10/12/Virtual_Memory_C_strings_proc/">《虚拟内存探究 – 第一篇:C strings &amp; /proc》</a>中的相关介绍）再次确认之前得到的结论是否正确。</p>
+
+<p>我们在(<code class="highlighter-rouge">main-6.c</code>)的基础上添加个<code class="highlighter-rouge">getchar()</code>函数以便暂停程序的执行，有时间查看<code class="highlighter-rouge">/proc</code>(<code class="highlighter-rouge">main-7.c</code>)：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+/**                                                                                                      
+ * f - print locations of various elements                                                               
+ *                                                                                                       
+ * Returns: nothing                                                                                      
+ */
+void f(void)
+{
+     int a;
+     int b;
+     int c;
+
+     a = 98;
+     b = 1024;
+     c = a * b;
+     printf("[f] a = %d, b = %d, c = a * b = %d\n", a, b, c);
+     printf("[f] Adresses of a: %p, b = %p, c = %p\n", (void *)&amp;a, (void *)&amp;b, (void *)&amp;c);
+}
+
+/**                                                                                                      
+ * main - print locations of various elements                                                            
+ *                                                                                                       
+ * Return: EXIT_FAILURE if something failed. Otherwise EXIT_SUCCESS                                      
+ */
+int main(int ac, char **av, char **env)
+{
+     int a;
+     void *p;
+     int i;
+     int size;
+
+     printf("Address of a: %p\n", (void *)&amp;a);
+     p = malloc(98);
+     if (p == NULL)
+     {
+          fprintf(stderr, "Can't malloc\n");
+          return (EXIT_FAILURE);
+     }
+     printf("Allocated space in the heap: %p\n", p);
+     printf("Address of function main: %p\n", (void *)main);
+     printf("First bytes of the main function:\n\t");
+     for (i = 0; i &lt; 15; i++)
+     {
+          printf("%02x ", ((unsigned char *)main)[i]);
+     }
+     printf("\n");
+     printf("Address of the array of arguments: %p\n", (void *)av);
+     printf("Addresses of the arguments:\n\t");
+     for (i = 0; i &lt; ac; i++)
+     {
+          printf("[%s]:%p ", av[i], av[i]);
+     }
+     printf("\n");
+     printf("Address of the array of environment variables: %p\n", (void *)env);
+     printf("Address of the first environment variables:\n");
+     for (i = 0; i &lt; 3; i++)
+     {
+          printf("\t[%p]:\"%s\"\n", env[i], env[i]);
+     }
+     /* size of the env array */
+     i = 0;
+     while (env[i] != NULL)
+     {
+          i++;
+     }
+     i++; /* the NULL pointer */
+     size = i * sizeof(char *);
+     printf("Size of the array env: %d elements -&gt; %d bytes (0x%x)\n", i, size, size);
+     f();
+     getchar();
+     return (EXIT_SUCCESS);
+}
+</code></pre></div></div>
+<p>编译执行:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>julien@holberton:~/holberton/w/hackthevm2$ gcc -Wall -Wextra -Werror main-7.c -o 7
+julien@holberton:~/holberton/w/hackthevm2$ ./7 Rona is a Legend SRE
+Address of a: 0x7fff16c8146c
+Allocated space in the heap: 0x2050010
+Address of function main: 0x400739
+First bytes of the main function:
+    55 48 89 e5 48 83 ec 40 89 7d dc 48 89 75 d0 
+Address of the array of arguments: 0x7fff16c81568
+Addresses of the arguments:
+    [./7]:0x7fff16c82376 [Rona]:0x7fff16c8237a [is]:0x7fff16c8237f [a]:0x7fff16c82382 [Legend]:0x7fff16c82384 [SRE]:0x7fff16c8238b 
+Address of the array of environment variables: 0x7fff16c815a0
+Address of the first environment variables:
+    [0x7fff16c8238f]:"XDG_VTNR=7"
+    [0x7fff16c8239a]:"XDG_SESSION_ID=c2"
+    [0x7fff16c823ac]:"CLUTTER_IM_MODULE=xim"
+Size of the array env: 62 elements -&gt; 496 bytes (0x1f0)
+[f] a = 98, b = 1024, c = a * b = 100352
+[f] Adresses of a: 0x7fff16c81424, b = 0x7fff16c81428, c = 0x7fff16c8142c
+</code></pre></div></div>
+
+<p>查看<code class="highlighter-rouge">/proc/[pid]/maps</code>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>julien@holberton:~$ ps aux | grep "./7" | grep -v grep
+julien     5788  0.0  0.0   4336   628 pts/8    S+   18:04   0:00 ./7 Rona is a Legend SRE
+julien@holberton:~$ cat /proc/5788/maps
+00400000-00401000 r-xp 00000000 08:01 171828                             /home/julien/holberton/w/hackthevm2/7
+00600000-00601000 r--p 00000000 08:01 171828                             /home/julien/holberton/w/hackthevm2/7
+00601000-00602000 rw-p 00001000 08:01 171828                             /home/julien/holberton/w/hackthevm2/7
+02050000-02071000 rw-p 00000000 00:00 0                                  [heap]
+7f68caa1c000-7f68cabd6000 r-xp 00000000 08:01 136253                     /lib/x86_64-linux-gnu/libc-2.19.so
+7f68cabd6000-7f68cadd6000 ---p 001ba000 08:01 136253                     /lib/x86_64-linux-gnu/libc-2.19.so
+7f68cadd6000-7f68cadda000 r--p 001ba000 08:01 136253                     /lib/x86_64-linux-gnu/libc-2.19.so
+7f68cadda000-7f68caddc000 rw-p 001be000 08:01 136253                     /lib/x86_64-linux-gnu/libc-2.19.so
+7f68caddc000-7f68cade1000 rw-p 00000000 00:00 0 
+7f68cade1000-7f68cae04000 r-xp 00000000 08:01 136229                     /lib/x86_64-linux-gnu/ld-2.19.so
+7f68cafe8000-7f68cafeb000 rw-p 00000000 00:00 0 
+7f68cafff000-7f68cb003000 rw-p 00000000 00:00 0 
+7f68cb003000-7f68cb004000 r--p 00022000 08:01 136229                     /lib/x86_64-linux-gnu/ld-2.19.so
+7f68cb004000-7f68cb005000 rw-p 00023000 08:01 136229                     /lib/x86_64-linux-gnu/ld-2.19.so
+7f68cb005000-7f68cb006000 rw-p 00000000 00:00 0 
+7fff16c62000-7fff16c83000 rw-p 00000000 00:00 0                          [stack]
+7fff16d07000-7fff16d09000 r--p 00000000 00:00 0                          [vvar]
+7fff16d09000-7fff16d0b000 r-xp 00000000 00:00 0                          [vdso]
+ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]
+julien@holberton:~$ 
+</code></pre></div></div>
+<p>通过<code class="highlighter-rouge">maps</code>文件，我们可以确认以下几点：</p>
+<ul>
+  <li>栈地址从<code class="highlighter-rouge">0x7fff16c62000</code>开始，结束于<code class="highlighter-rouge">0x7fff16c83000</code>。我们的局部变量都位于这一区域(<code class="highlighter-rouge">0x7fff16c8146c</code>, <code class="highlighter-rouge">0x7fff16c81424</code>, <code class="highlighter-rouge">0x7fff16c81428</code>, <code class="highlighter-rouge">0x7fff16c8142c</code>)。</li>
+  <li>堆地址从<code class="highlighter-rouge">02050000</code>开始，结束于<code class="highlighter-rouge">02071000</code>。我们动态分配的内存也位于这一区域（<code class="highlighter-rouge">0x2050010</code>）。</li>
+  <li>
+    <p>代码段（<code class="highlighter-rouge">main</code>函数）位于地址<code class="highlighter-rouge">0x400739</code>，因此位于下面的区段：</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  00400000-00401000 r-xp 00000000 08:01 171828 /home/julien/holberton/w/hackthevm2/7
+</code></pre></div>    </div>
+    <p>它来自可执行文件<code class="highlighter-rouge">/home/julien/holberton/w/hackthevm2/7</code>，并且具有可执行权限。</p>
+  </li>
+  <li>命令行参数（变量argv）和环境变量参数(变量env)(从地址<code class="highlighter-rouge">0x7fff16c81568</code> 到 <code class="highlighter-rouge">0x7fff16c8238f</code> + <code class="highlighter-rouge">0x1f0</code>)落在栈的范围内。也就是说，<strong>它们在栈内部而不是在栈外面。</strong></li>
+</ul>
+
+<p>这也带来了更多的问题：</p>
+<ul>
+  <li>为什么可执行文件在内存中被分成三部分，并且每部分具有不同的权限？下面两个区域中是什么？
+    <ul>
+      <li><code class="highlighter-rouge">00600000-00601000 r--p 00000000 08:01 171828 /home/julien/holberton/w/hackthevm2/7</code></li>
+      <li><code class="highlighter-rouge">00601000-00602000 rw-p 00001000 08:01 171828 /home/julien/holberton/w/hackthevm2/7</code></li>
+    </ul>
+  </li>
+  <li>其他的区段又是干嘛的？</li>
+  <li>我们动态分配的内存为何不是从堆的起始位置<code class="highlighter-rouge">0x2050000</code>开始，而是偏移16个字节从<code class="highlighter-rouge">0x2050010</code>开始？</li>
+</ul>
+
+<p>当然还有另一个事实没有确认：堆真的是向上生长的吗？</p>
+
+<p>我们将在下一篇文章中解答这些问题。在结束本章前，让我们看下目前得到的虚拟内存示意图：</p>
+
+<p><img src="http://data.coderhuo.tech/blog/virtual_memory/virtual_memory_args_stack.png" alt="" /></p>
+
+<h2 id="九下节预告">九、下节预告</h2>
+<p>通过简单的打印信息，我们学到了有关虚拟内存的很多知识。但是在完成虚拟内存布局图之前，我们还有一些问题需要解决。下一篇文章我们将解决剩余问题。</p>
+
+<h2 id="十继续阅读">十、继续阅读</h2>
+
+<ul>
+  <li>第一篇:<a href="http://blog.coderhuo.tech/2017/10/12/Virtual_Memory_C_strings_proc/">虚拟内存探究 – 第一篇:C strings &amp; /proc</a></li>
+  <li>第二篇:<a href="http://blog.coderhuo.tech/2017/10/15/Virtual_Memory_python_bytes/">虚拟内存探究 – 第二篇:Python 字节</a></li>
+  <li>第三篇:<a href="http://blog.coderhuo.tech/2017/10/16/Virtual_Memory_drawing_VM_diagram/">虚拟内存探究 – 第三篇:一步一步画虚拟内存图</a></li>
+  <li>第四篇:<a href="http://blog.coderhuo.tech/2017/10/18/Virtual_Memory_malloc_and_heap/">虚拟内存探究 – 第四篇:malloc, heap &amp; the program break</a></li>
+  <li>第五篇:<a href="http://blog.coderhuo.tech/2019/08/31/Virtual_Memory_malloc_and_heap_stack_and_register/">虚拟内存探究 – 第五篇:The Stack, registers and assembly code</a></li>
+</ul>
+
+<h2 id="十一原文链接">十一、原文链接</h2>
+<p><a href="https://blog.holbertonschool.com/hack-the-virtual-memory-drawing-the-vm-diagram/">Hack The Virtual Memory: Drawing the VM diagram</a></p>
+:ET
