@@ -1,4 +1,0 @@
-I"�
-<p>实际项目中发现Json-C用法不当导致的内存泄露、踩内存问题，大都是因为不清楚下面几个接口的用法。<br />
-以下分析基于https://github.com/json-c/json-c（ 0.12.1 release）。</p>
-:ET

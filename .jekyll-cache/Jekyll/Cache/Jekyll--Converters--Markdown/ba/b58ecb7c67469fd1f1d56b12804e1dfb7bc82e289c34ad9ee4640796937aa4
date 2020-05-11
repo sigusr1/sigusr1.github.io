@@ -1,3 +1,0 @@
-I"{<p>这是虚拟内存系列文章的第二篇。<br />
-这次我们要做的事情和<a href="http://blog.coderhuo.tech/2017/10/12/Virtual_Memory_C_strings_proc/">《虚拟内存探究 – 第一篇:C strings &amp; /proc》</a>类似，不同的是我们将访问Python 3 脚本的虚拟内存。这会比较费劲， 所以我们需要了解Pyhton3 内部的一些机制。</p>
-:ET

@@ -1,8 +1,0 @@
-I"<p>这是虚拟内存系列文章的第四篇。<br />
-本文主要介绍malloc和heap相关知识，以便回答<a href="http://blog.coderhuo.tech/2017/10/16/Virtual_Memory_drawing_VM_diagram/">上一篇文章</a>结尾提出的一些问题:</p>
-
-<ul>
-  <li>动态分配的内存为何不是从堆的起始位置<code class="highlighter-rouge">0x2050000</code>开始，而是偏移16个字节从<code class="highlighter-rouge">0x2050010</code>开始？这16个字节是什么用途?</li>
-  <li>堆真的是向上生长的吗?</li>
-</ul>
-:ET

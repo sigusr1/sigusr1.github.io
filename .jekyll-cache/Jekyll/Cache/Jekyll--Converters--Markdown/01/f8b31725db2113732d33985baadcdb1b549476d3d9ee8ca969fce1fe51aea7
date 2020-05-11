@@ -1,5 +1,0 @@
-I"
-<p>代码编译的时候，编译服务器莫名其妙的报以下错误:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fatal error: error writing to /tmp/ccGjoKTF.s:No space left on device
-</code></pre></div></div>
-:ET

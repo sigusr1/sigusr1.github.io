@@ -1,5 +1,0 @@
-I":<p>在基于RTP的实时码流传输过程中，经常会遇到音视频卡顿、花屏的现象。对于这类问题，如何定位？<br />
-下面这个工具可以帮助分析类似问题：</p>
-
-<p><a href="https://github.com/sigusr1/rtp_parse_from_pcap">https://github.com/sigusr1/rtp_parse_from_pcap</a></p>
-:ET
