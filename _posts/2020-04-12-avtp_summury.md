@@ -10,7 +10,7 @@ mathjax: true
 
 * content
 {:toc}  
-本文是AVB系列文章的第三篇，主要介绍AVB协议族中的音视频传输协议AVTP(IEEE Std 1722-2016)。 
+本文是AVB系列文章的第三篇，主要介绍AVB协议族中的音视频传输协议AVTP(IEEE Std 1722-2016)。
 
 
 
@@ -88,7 +88,7 @@ H264帧分为I帧、P帧、B帧三类，其中：
 B帧使得解码顺序和显示顺序不再一致。记住这一点对后面理解AVTP中的两个时间戳有帮助。
 
 
-![B帧解码显示示意图](http://data.coderhuo.tech/blog/avtp/b_frame.jpg) 
+![B帧解码显示示意图](http://data.coderhuo.tech/blog/avtp/b_frame.jpg)
 
 
 #### 2.2 RTP基础知识 ####  
@@ -200,3 +200,4 @@ AVTP中有了展示时间戳，为什么还要加上h264_timestamp时间戳？
 
 1. [H264 over RTP 的打包](https://blog.csdn.net/u010178611/article/details/82592393)
 2. [Understanding IEEE’s deterministic AV bridging standards](https://www.embedded.com/understanding-ieees-deterministic-av-bridging-standards/)
+3. [参考报文：gstream工具生成的报文](http://data.coderhuo.tech/blog/avtp/gstream_avtp.pcap)
