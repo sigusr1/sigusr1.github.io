@@ -33,3 +33,8 @@ mathjax: true
 
 ## 5. [《软件工程思想》](http://data.coderhuo.tech/books/tech/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%80%9D%E6%83%B3/) ##
 畅销书《高质量C++/C编程指南》作者林锐出品，这里有篇博客摘录了其中的精华片段，可供参考:[《软件工程思想》--赏析](http://blog.coderhuo.tech/2020/05/10/software_project/)。
+
+## 6. [《深入理解计算机系统》](http://data.coderhuo.tech/books/tech/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/) ##
+
+建议阅读，如果能在大学阶段精度最好。  
+有了一定的经验后回过头来再读这本书，也可以借机系统性梳理下相关知识。
