@@ -11,7 +11,7 @@ mathjax: true
 * content
 {:toc}  
 
-本文主要介绍文件碎片对Flash写性能的影响。  
+本文主要介绍文件碎片对Flash性能的影响。  
 
 
 
