@@ -3,7 +3,7 @@ layout: post
 title:  "curl交叉编译方法"  
 date:   2017-06-04 23:40:18 +0800  
 categories: 环境搭建  
-tags: 环境搭建 curl https openssl cross_build 
+tags: 环境搭建 curl https openssl cross_build
 author: sigusr1  
 mathjax: true  
 ---
@@ -20,7 +20,7 @@ arm平台curl交叉编译方法。
 
 编译目录结构如下:
 
-![目录结构图](http://data.coderhuo.tech/blog/curl%B1%E0%D2%EB%C4%BF%C2%BC%BD%E1%B9%B9%CD%BC.jpg)
+![目录结构图](http://data.coderhuo.tech/blog/curl_dir_tree.jpg)
 
 其中curl-7.29.0、openssl-OpenSSL\_1\_0\_2g和zlib-1.2.8是待编译的源码。libs用来存放编译出来的库以及头文件。
 
@@ -37,7 +37,7 @@ arm平台curl交叉编译方法。
 	AR=ar   
 	RANLIB=ranlib
 	```
-	
+
 	改成:
 
 	```
@@ -58,9 +58,9 @@ arm平台curl交叉编译方法。
 
 	x86用下面的命令
 	```
-	./Configure linux-x86_64 --prefix=/home/test/https_framework/libs/openssl 
+	./Configure linux-x86_64 --prefix=/home/test/https_framework/libs/openssl
 	```
-           
+
 	如果提示编译前先make depend，可忽略。
 2. 在makefile中做如下修改：
 
