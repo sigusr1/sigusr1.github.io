@@ -2,8 +2,8 @@
 layout: post  
 title:  "NAND Flash基础知识简介"  
 date:   2020-07-18  
-categories:   计算机基础
-tags: 存储  NAND Flash FTL 垃圾回收 擦写均衡
+categories:   存储
+tags:   FTL 垃圾回收 擦写均衡
 author: coderhuo  
 mathjax: true
 ---

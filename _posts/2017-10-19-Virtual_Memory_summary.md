@@ -2,8 +2,8 @@
 layout: post  
 title:  "虚拟内存探究，深入理解进程地址空间"  
 date:   2017-10-19
-categories: 翻译  
-tags: 虚拟内存 翻译 
+categories: 虚拟内存  
+tags: 翻译 
 author: coderhuo  
 mathjax: true  
 ---

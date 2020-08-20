@@ -2,7 +2,7 @@
 layout: post  
 title:  "ARM下char类型符号问题"  
 date:   2017-03-19  
-categories: C/C++  
+categories: 计算机基础  
 tags: arm char signed unsigned  
 author: coderhuo  
 mathjax: true  

@@ -2,8 +2,8 @@
 layout: post  
 title:  "Flash写入性能下降问题"  
 date:   2020-07-19  
-categories:   计算机基础
-tags: 存储  翻译 FTL 垃圾回收 擦写均衡
+categories:   存储
+tags:  翻译 FTL 垃圾回收 擦写均衡
 author: coderhuo  
 mathjax: true
 ---

@@ -2,8 +2,8 @@
 layout: post  
 title:  "利用空口抓包分析Wi-Fi问题"  
 date:   2018-11-29  
-categories: 工具  
-tags: 工具 问题分析 分享
+categories: 网络  
+tags: Wi-Fi 问题分析 空口抓包
 author: coderhuo  
 mathjax: true
 ---

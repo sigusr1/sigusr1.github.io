@@ -2,8 +2,8 @@
 layout: post  
 title:  "虚拟内存探究 -- 第四篇:malloc, heap & the program break"  
 date:   2017-10-18
-categories: 翻译  
-tags: 虚拟内存 翻译 
+categories: 虚拟内存  
+tags:  翻译 
 author: coderhuo  
 mathjax: true  
 ---

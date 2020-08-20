@@ -2,8 +2,8 @@
 layout: post  
 title:  "可怕的extern关键字"  
 date:   2017-04-03  
-categories: C/C++  
-tags: C/C++ extern  
+categories: 软件设计  
+tags: 头文件 extern  
 author: coderhuo  
 mathjax: true  
 ---

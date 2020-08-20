@@ -2,8 +2,8 @@
 layout: post  
 title:  "虚拟内存探究 -- 第一篇:C strings & /proc"  
 date:   2017-10-12
-categories: 翻译  
-tags: 虚拟内存 翻译 
+categories: 虚拟内存  
+tags: 翻译 
 author: coderhuo  
 mathjax: true  
 ---

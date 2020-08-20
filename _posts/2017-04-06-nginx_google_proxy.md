@@ -2,7 +2,7 @@
 layout: post  
 title:  "Nginx反向代理，建立Google镜像"  
 date:   2017-04-16
-categories: 环境搭建  
+categories: 工具/环境搭建  
 tags: nginx google 代理 
 author: coderhuo  
 mathjax: true  

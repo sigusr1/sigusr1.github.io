@@ -2,7 +2,7 @@
 layout: post  
 title:  "跨平台printf封装方法"  
 date:   2018-05-26
-categories: 重构  
+categories: 软件设计  
 tags: 重构 函数指针 
 author: coderhuo  
 mathjax: true  

@@ -2,7 +2,7 @@
 layout: post  
 title:  "去掉宏__FILE__的路径"  
 date:   2017-04-14  
-categories: C/C++  
+categories: 计算机基础  
 tags: __FILE__ 路径  
 author: coderhuo  
 mathjax: true  

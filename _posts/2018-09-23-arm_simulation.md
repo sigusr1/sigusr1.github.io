@@ -2,8 +2,8 @@
 layout: post  
 title:  "Ubuntu上搭建arm虚拟运行环境"  
 date:   2018-09-23  
-categories:   工具
-tags: ubuntu arm 虚拟机 模拟 arm-linux-gnueabihf-gcc
+categories:   工具/环境搭建
+tags: ubuntu arm 虚拟机
 author: coderhuo  
 mathjax: true
 ---

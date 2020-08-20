@@ -2,8 +2,8 @@
 layout: post  
 title:  "如何在实时操作系统(RTOS)中使用GCC的栈溢出保护(SSP)功能"  
 date:   2019-07-14  
-categories:   翻译
-tags: arm RTOS 栈保护 操作系统 栈溢出
+categories:   操作系统
+tags: RTOS 栈保护 栈溢出 翻译
 author: coderhuo  
 mathjax: true
 ---

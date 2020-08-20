@@ -1,9 +1,9 @@
 ---
 layout: post  
-title:  " Source Insight集成svn命令，打开当前文件夹命令"  
+title:  " Source Insight集成svn命令"  
 date:   2015-05-31  
-categories: 工具  
-tags: 工具  效率
+categories: 工具/环境搭建  
+tags: 效率 svn命令
 author: coderhuo  
 mathjax: true  
 ---

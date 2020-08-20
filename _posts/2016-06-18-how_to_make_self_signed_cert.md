@@ -2,7 +2,7 @@
 layout: post  
 title:  "如何制作自签名证书"  
 date:   2016-06-18  
-categories:   工具
+categories:   安全
 tags: openssl RSA 证书 自签名
 author: coderhuo  
 mathjax: true

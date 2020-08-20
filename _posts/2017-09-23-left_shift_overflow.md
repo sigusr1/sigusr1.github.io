@@ -2,7 +2,7 @@
 layout: post  
 title:  "移位溢出"  
 date:   2017-09-23  
-categories: C/C++  
+categories: 计算机基础  
 tags: 移位 溢出  
 author: coderhuo  
 mathjax: true  

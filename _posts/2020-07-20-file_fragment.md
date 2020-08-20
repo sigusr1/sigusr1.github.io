@@ -2,7 +2,7 @@
 layout: post  
 title:  "文件碎片对Flash性能的影响"  
 date:   2020-07-20  
-categories:   计算机基础
+categories:   存储
 tags: 簇  文件碎片 cluster
 author: coderhuo  
 mathjax: true

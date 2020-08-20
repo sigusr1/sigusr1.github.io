@@ -1,8 +1,8 @@
 ---
 layout: post  
 title:  "串口通信中ICRNL惹的祸"  
-date:   2017-08-27  
-categories: C/C++  
+date:   2017-08-19  
+categories: 其他  
 tags: 串口 转义 termios  
 author: coderhuo  
 mathjax: true  

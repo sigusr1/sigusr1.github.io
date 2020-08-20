@@ -1,9 +1,9 @@
 ---
 layout: post  
-title:  "华为手机安装goolge服务的方法"  
+title:  "华为手机安装Google服务的方法"  
 date:   2018-12-30  
-categories: 工具  
-tags: 工具 分享
+categories: 工具/环境搭建  
+tags: 科学上网 Google
 author: coderhuo  
 mathjax: true
 ---

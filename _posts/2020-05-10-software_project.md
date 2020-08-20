@@ -2,7 +2,7 @@
 layout: post  
 title:  "《软件工程思想》--赏析"  
 date:   2020-05-10  
-categories:   读书笔记
+categories:   读书
 tags: 读书笔记  软件工程思想 林锐
 author: coderhuo  
 mathjax: true

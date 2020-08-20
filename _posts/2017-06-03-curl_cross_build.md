@@ -2,8 +2,8 @@
 layout: post  
 title:  "curl交叉编译方法"  
 date:   2017-06-04 23:40:18 +0800  
-categories: 环境搭建  
-tags: 环境搭建 curl https openssl cross_build
+categories: 工具/环境搭建  
+tags: curl https openssl cross_build
 author: sigusr1  
 mathjax: true  
 ---

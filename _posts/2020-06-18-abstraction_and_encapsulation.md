@@ -3,7 +3,7 @@ layout: post
 title:  "日常工作中的设计：解耦和封装"  
 date:   2020-06-18  
 categories:   软件设计
-tags:  软件设计 抽象 封装 解耦 策略模式
+tags:  重构 抽象 封装 解耦 
 author: coderhuo  
 mathjax: true
 ---

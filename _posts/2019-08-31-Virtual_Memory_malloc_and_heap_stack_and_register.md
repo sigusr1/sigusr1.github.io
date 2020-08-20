@@ -2,8 +2,8 @@
 layout: post  
 title:  "虚拟内存探究 -- 第五篇:The Stack, registers and assembly code"  
 date:   2019-08-31  
-categories:   翻译
-tags: 虚拟内存 翻译 栈 寄存器 汇编
+categories: 虚拟内存  
+tags:  翻译 
 author: coderhuo  
 mathjax: true
 ---

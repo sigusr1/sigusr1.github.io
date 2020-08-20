@@ -2,8 +2,8 @@
 layout: post  
 title:  "TF卡存储性能调优案例分析"  
 date:   2020-07-21  
-categories:   计算机基础
-tags:  文件碎片 随机读写 顺序读写  原址更新
+categories:   存储
+tags:  文件碎片 随机/顺序读写 原址更新
 author: coderhuo  
 mathjax: true
 ---
