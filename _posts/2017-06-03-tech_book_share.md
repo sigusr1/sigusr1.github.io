@@ -1,9 +1,9 @@
 ---
 layout: post  
-title:  "技术书籍"  
+title:  "我读过的书"  
 date:   2017-06-03 11:40:18 +0800  
 categories: 读书  
-tags: 技术书籍 分享 推荐  
+tags:  分享 推荐  
 author: coderhuo  
 mathjax: true  
 ---
@@ -11,11 +11,24 @@ mathjax: true
 * content
 {:toc}
 
-本文列举一些不错的技术类书籍，可通过链接下载电子版。
+本文记录我读过的书，并根据个人体验进行了粗略的等级划分。
 
 
 
 
+
+
+等级划分具有很大的主观性，仅供参考。  
+
+相关书目维护在xmind文档中，不定期更新：[《我读过的书》](http://data.coderhuo.tech/books/%E6%88%91%E8%AF%BB%E8%BF%87%E7%9A%84%E4%B9%A6.xmind)     
+
+
+<br />
+
+===========================================================================      
+
+
+下面是之前发现的一些不错的技术书籍，可通过链接下载电子版。后续不再更新。
 
 ## 1. [《嵌入式Linux性能详解》](http://data.coderhuo.tech/books/tech/%C7%B6%C8%EB%CA%BDLinux%D0%D4%C4%DC%CF%EA%BD%E2.pdf) ##
 
