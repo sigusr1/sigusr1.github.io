@@ -11,7 +11,7 @@ mathjax: true
 * content
 {:toc}
 
-在常规的面向对象语言中(比如C++)，this指针的指向是确定的。但在JavaScript中，this指向依赖于运行环境。
+在常规的面向对象语言中(比如C++)，this指针的指向是确定的。但在JavaScript中，this指向依赖于运行环境。  
 
 
 
@@ -26,6 +26,7 @@ mathjax: true
   
 
 
+  
 下面的例子，预期的输出是`nihao`：
 
 
