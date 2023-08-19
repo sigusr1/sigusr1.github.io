@@ -11,6 +11,19 @@ mathjax: true
 * content
 {:toc}
 
+本文主要介绍如何在source insight上集成svn命令。
+
+
+
+
+
+  
+
+**1. SVN Log**  
+
+
+
+
 在常规的面向对象语言中(比如C++)，this指针的指向是确定的。但在JavaScript中，this指向依赖于运行环境。  
 
 
