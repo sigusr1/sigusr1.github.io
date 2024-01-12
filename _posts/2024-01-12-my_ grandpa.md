@@ -19,43 +19,10 @@ mathjax: true
 
   
 
-**1. SVN Log**  
-
-
-option->Custom Commands   
-添加一个命令  
-名字：SVN Log  （随便自己写）  
-运行："C:\Program Files\TortoiseSVN\bin\TortoiseProc.exe" /command:log /path:%f /notempfile /closeonend    
-其中TortoiseProc.exe的目录以自己电脑上的为准。
-
-**2. SVN Diff**  
-
-
-option->Custom Commands  
-添加一个命令  
-名字：SVN Diff  （随便自己写）  
-运行："C:\Program Files\TortoiseSVN\bin\TortoiseProc.exe" /command:diff /path:%f /notempfile /closeonend  
-
-**同样，添加命令 ShellExecute open %d 可以打开当前文件所在文件夹。**
-
-接下来可以在source insight上添加相关命令的自定义快捷键和自定义菜单。
 
                 
 
----
-layout: post  
-title:  "我的爷爷"  
-date:   2024-01-12
-categories: 生活  
-tags: 生活 家人
-author: coderhuo  
-mathjax: true  
----
 
-* content
-{:toc}
-
-十年生死两茫茫，不思量，自难忘。
 
 
 
