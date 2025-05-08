@@ -11,7 +11,7 @@ mathjax: true
 
 博客迁移中，后续本网站仅作为目录索引，请访问：
 
-[技术类文章](https://tech.coderhuo.tech)
+[技术类文章](http://tech.coderhuo.tech)
 
-[非技术类文章](https://life.coderhuo.tech)
+[非技术类文章](http://life.coderhuo.tech)
 
