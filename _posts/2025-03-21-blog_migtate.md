@@ -15,7 +15,7 @@ mathjax: true
   - [技术类文章](http://tech.coderhuo.tech)
   - [非技术类文章](http://life.coderhuo.tech)
 
-- 备份站：稀土掘金-[coderhuo](https://juejin.cn/user/3298190615383048/posts)
+- 备份站：稀土掘金  -  [coderhuo](https://juejin.cn/user/3298190615383048/posts)
  
 - 微信/公众号：coderhuo
 
