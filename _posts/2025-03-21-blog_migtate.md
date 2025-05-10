@@ -9,7 +9,8 @@ mathjax: true
 ---
 
 
-博客迁移，请在下面的网站中搜索同名文章。
+博客迁移，请在下面的网站中搜索同名文章:
+
 
 - 主站：github page部署
   - [技术类文章](http://tech.coderhuo.tech)
